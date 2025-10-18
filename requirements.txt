@@ -1,0 +1,17 @@
+pandas
+pillow
+opencv-python
+tqdm
+torch
+tensorboardX
+pyyaml
+imageio
+torchvision
+matplotlib
+torchinfo
+timm
+einops
+pytorch_wavelets
+pytorch-msssim
+piq
+torchmetrics[image]
