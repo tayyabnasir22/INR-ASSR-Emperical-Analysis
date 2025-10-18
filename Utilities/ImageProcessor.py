@@ -4,6 +4,7 @@ from torchvision import transforms
 from torchvision.transforms import InterpolationMode
 import random
 import math
+import torch.nn.functional as F
 
 class ImageProcessor:
     @staticmethod
@@ -188,3 +189,22 @@ class ImageProcessor:
                 hr_coord_patches.append(hr_patch.contiguous())
 
         return lr_patches, hr_coord_patches
+    
+    @staticmethod
+    def FirstOrderDerivativeSobel(img):
+        """Compute Sobel gradients for an image tensor (N,C,H,W)."""
+        C = img.shape[1]
+        sobel_x = torch.tensor([[-1,0,1],
+                                [-2,0,2],
+                                [-1,0,1]], dtype=img.dtype, device=img.device).view(1,1,3,3)
+        sobel_y = torch.tensor([[-1,-2,-1],
+                                [ 0, 0, 0],
+                                [ 1, 2, 1]], dtype=img.dtype, device=img.device).view(1,1,3,3)
+
+        # Repeat for each channel
+        sobel_x = sobel_x.repeat(C, 1, 1, 1)  # [C,1,3,3]
+        sobel_y = sobel_y.repeat(C, 1, 1, 1)  # [C,1,3,3]
+
+        gx = F.conv2d(img, sobel_x, padding=1, groups=C)
+        gy = F.conv2d(img, sobel_y, padding=1, groups=C)
+        return gx, gy
