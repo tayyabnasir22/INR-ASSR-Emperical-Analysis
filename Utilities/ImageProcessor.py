@@ -43,9 +43,9 @@ class ImageProcessor:
         return diff_sr, diff_hr
     
     @staticmethod
-    def Resize(img, size):
+    def Resize(img, size, interType = InterpolationMode.BICUBIC):
         return transforms.ToTensor()(
-            transforms.Resize(size, InterpolationMode.BICUBIC)(
+            transforms.Resize(size, interType)(
                 transforms.ToPILImage()(img)))
 
     @staticmethod
