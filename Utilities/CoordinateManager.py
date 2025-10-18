@@ -24,3 +24,9 @@ class CoordinateManager:
         coord = CoordinateManager.CreateCoordinates(img.shape[-2:])
         rgb = img.view(3, -1).permute(1, 0)
         return coord, rgb
+    
+    @staticmethod
+    def CreateHierarchicalCoordinates(coord, n):
+        coord_clip = torch.clip(coord - 1e-9, 0., 1.)
+        coord_bin = ((coord_clip * 2 ** (n + 1)).floor() % 2)
+        return coord_bin
