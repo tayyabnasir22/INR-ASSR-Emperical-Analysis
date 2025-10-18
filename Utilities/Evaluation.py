@@ -1,6 +1,7 @@
 from Models.ScoreEvaluations import ScoreEvaluations
 from Utilities.ImageProcessor import ImageProcessor
 from pytorch_msssim import ssim
+import torch
 
 class Evalutaion:
     def PSNR(sr, hr, dataset=None, scale=1, rgb_range=1):

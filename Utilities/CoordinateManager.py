@@ -1,4 +1,4 @@
-
+import torch
 
 class CoordinateManager:
     @staticmethod

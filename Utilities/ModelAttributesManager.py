@@ -1,3 +1,6 @@
+from torch.optim import SGD, Adam
+import numpy as np
+
 class ModelAttributesManager:
     def ComputeParameters(model, text=False):
         tot = int(sum([np.prod(p.shape) for p in model.parameters()]))
