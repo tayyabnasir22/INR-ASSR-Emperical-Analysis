@@ -1,9 +1,9 @@
+from DataProcessors.SRDataProcessorBase import SRDataProcessorBase
 from Utilities.CoordinateManager import CoordinateManager
-from torch.utils.data import Dataset
 import random
 import torch
 
-class SRImplicitPaired(Dataset):
+class SRImplicitPaired(SRDataProcessorBase):
     def __init__(self, dataset, inp_size=None, augment=False):
         self.dataset = dataset
         self.inp_size = inp_size

@@ -1,3 +1,4 @@
+from DataProcessors.SRDataProcessorBase import SRDataProcessorBase
 from Utilities.CoordinateManager import CoordinateManager
 from Utilities.ImageProcessor import ImageProcessor
 import math
@@ -6,7 +7,7 @@ import torch
 import numpy as np
 from PIL import Image
 
-class SRImplicitDownsampled:
+class SRImplicitDownsampled(SRDataProcessorBase):
     def __init__(self, dataset, inp_size=None, scale_min=1, scale_max=None,
                  augment=False):
         self.dataset = dataset
