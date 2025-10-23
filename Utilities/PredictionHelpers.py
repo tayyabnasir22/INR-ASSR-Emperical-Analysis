@@ -1,4 +1,4 @@
-from Models.Averager import Averager
+from Models.RunningAverage import RunningAverage
 from Utilities.CoordinateManager import CoordinateManager
 from Utilities.Evaluation import Evalutaion
 import random
@@ -54,8 +54,8 @@ class PredictionHelpers:
         else:
             raise NotImplementedError
 
-        val_res = Averager()
-        Evalutaion.ssim_res = Averager()
+        val_res = RunningAverage()
+        ssim_res = RunningAverage()
 
         pbar = tqdm(loader, leave=False, desc='val')
         for batch in pbar:
@@ -111,9 +111,9 @@ class PredictionHelpers:
             res = metric_fn(pred, batch['gt'])
             res1 = metric_fn1(pred, batch['gt'])
             val_res.add(res.item(), inp.shape[0])
-            Evalutaion.ssim_res.add(res1.item(), inp.shape[0])
+            ssim_res.add(res1.item(), inp.shape[0])
 
             if verbose:
                 pbar.set_description('val {:.4f}'.format(val_res.item()))
 
-        return val_res.item(), Evalutaion.ssim_res.item()
+        return val_res.item(), ssim_res.item()

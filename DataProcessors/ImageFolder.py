@@ -6,19 +6,12 @@ from torchvision import transforms
 
 class ImageFolder(FolderReaderBase):
 
-    def __init__(self, root_path, split_file=None, split_key=None, first_k=None,
-                 repeat=1, cache='none'):
+    def __init__(self, root_path,
+                 repeat=1):
         self.repeat = repeat
-        self.cache = cache
 
-        if split_file is None:
-            filenames = sorted(os.listdir(root_path))
-        else:
-            with open(split_file, 'r') as f:
-                filenames = json.load(f)[split_key]
-        if first_k is not None:
-            filenames = filenames[:first_k]
-
+        filenames = sorted(os.listdir(root_path))
+        
         self.files = []
         for filename in filenames:
             file = os.path.join(root_path, filename)

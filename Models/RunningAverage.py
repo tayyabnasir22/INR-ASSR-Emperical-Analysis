@@ -1,4 +1,4 @@
-class Averager():
+class RunningAverage():
 
     def __init__(self):
         self.n = 0.0
