@@ -1,10 +1,11 @@
+from DataProcessors.SRDataProcessorBase import SRDataProcessorBase
 from Utilities.CoordinateManager import CoordinateManager
 from Utilities.ImageProcessor import ImageProcessor
 import math
 import torch
 from PIL import Image
 
-class SRImplicitDownsampledOverlapPatched:
+class SRImplicitDownsampledOverlapPatched(SRDataProcessorBase):
     def __init__(self, dataset, inp_size=None, scale_min=1, scale_max=None,
                  patch_size=100, overlap=20, augment=False):
         self.dataset = dataset

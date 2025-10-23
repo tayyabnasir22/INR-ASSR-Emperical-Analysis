@@ -1,10 +1,11 @@
+from Decoders.DecoderBase import DecoderBase
 from Utilities.CoordinateManager import CoordinateManager
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-class LTE(nn.Module):
+class LTE(DecoderBase):
 
     def __init__(self, encoder, hidden_dim=256):
         super().__init__()

@@ -1,11 +1,11 @@
 from Components.CiaoSR_CrossScaleAttention import CiaoSR_CrossScaleAttention
 from Components.LIIF_MLP import LIIF_MLP
+from Decoders.DecoderBase import DecoderBase
 from Utilities.CoordinateManager import CoordinateManager
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 
-class CiaoSR(nn.Module):
+class CiaoSR(DecoderBase):
 
     def __init__(self, encoder):
         super().__init__()

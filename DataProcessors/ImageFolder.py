@@ -1,10 +1,10 @@
 import os
 import json
 from PIL import Image
-from torch.utils.data import Dataset
+from DataProcessors.FolderReaderBase import FolderReaderBase
 from torchvision import transforms
 
-class ImageFolder(Dataset):
+class ImageFolder(FolderReaderBase):
 
     def __init__(self, root_path, split_file=None, split_key=None, first_k=None,
                  repeat=1, cache='none'):
