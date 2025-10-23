@@ -19,16 +19,43 @@ class ImageProcessor:
             # crop 'scale' pixels from each border to avoid boundary effects
             if dataset == 'benchmark':
                 shave = scale
-                if sr.size(1) > 1: 
-                    # If multi-channel (RGB) image
-                    # Convert RGB to Y-channel (luminance) because most SR evaluation is done in Y channel of YCbCr space.
-                    # Gray coefficients are from ITU-R BT.601 standard.
-                    gray_coeffs = [65.738, 129.057, 25.064]
-                    convert = sr.new_tensor(gray_coeffs).view(1, 3, 1, 1) / 256
+            elif dataset == 'div2k':
+                # For DIV2K dataset, crop 'scale+6' pixels from border
+                # (DIV2K convention for fair evaluation)
+                shave = scale + 6
+            else:
+                raise NotImplementedError
 
-                    # Weighted sum across RGB channels → single-channel luminance
-                    diff_sr = diff_sr.mul(convert).sum(dim=1, keepdim=True)
-                    diff_hr = diff_hr.mul(convert).sum(dim=1, keepdim=True)
+            # Apply cropping (shaving) to remove boundary pixels
+            # [..., shave:-shave, shave:-shave] means crop H and W dimensions
+            diff_sr = diff_sr[..., shave:-shave, shave:-shave]
+            diff_hr = diff_hr[..., shave:-shave, shave:-shave]
+
+        return diff_sr, diff_hr
+    
+    @staticmethod
+    def PreprocessingForScoringYChannelOnly(sr, hr, dataset=None, scale=1, rgb_range=1):
+        # Normalize SR and HR images to [0,1] range (or scale defined by rgb_range)
+        diff_sr = sr / rgb_range
+        diff_hr = hr / rgb_range
+
+        if sr.size(1) > 1: 
+            # If multi-channel (RGB) image
+            # Convert RGB to Y-channel (luminance) because most SR evaluation is done in Y channel of YCbCr space.
+            # Gray coefficients are from ITU-R BT.601 standard.
+            gray_coeffs = [65.738, 129.057, 25.064]
+            convert = sr.new_tensor(gray_coeffs).view(1, 3, 1, 1) / 256
+
+            # Weighted sum across RGB channels → single-channel luminance
+            diff_sr = diff_sr.mul(convert).sum(dim=1, keepdim=True)
+            diff_hr = diff_hr.mul(convert).sum(dim=1, keepdim=True)
+
+        # If dataset is specified, apply dataset-specific preprocessing
+        if dataset is not None:
+            # For benchmark datasets (like Set5, Set14), 
+            # crop 'scale' pixels from each border to avoid boundary effects
+            if dataset == 'benchmark':
+                shave = scale
             elif dataset == 'div2k':
                 # For DIV2K dataset, crop 'scale+6' pixels from border
                 # (DIV2K convention for fair evaluation)
