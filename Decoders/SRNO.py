@@ -1,11 +1,12 @@
 from Components.SRNO_Attention import SRNO_Attention
+from Decoders.DecoderBase import DecoderBase
 from Utilities.CoordinateManager import CoordinateManager
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-class SRNO(nn.Module):
+class SRNO(DecoderBase):
 
     def __init__(self, encoder, blocks=16, hidden_dim=256):
         super().__init__()

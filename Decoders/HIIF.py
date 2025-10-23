@@ -1,11 +1,12 @@
 from Components.HIIF_Attention import HIIF_Attention
 from Components.HIIF_MLP import HIIF_MLP
+from Decoders.DecoderBase import DecoderBase
 from Utilities.CoordinateManager import CoordinateManager
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class hiif(nn.Module):
+class HIIF(DecoderBase):
 
     def __init__(self, encoder, blocks=16, hidden_dim=256):
         super().__init__()

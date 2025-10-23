@@ -1,11 +1,11 @@
 from Components.LIIF_MLP import LIIF_MLP
+from Decoders.DecoderBase import DecoderBase
 from Utilities.CoordinateManager import CoordinateManager
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-class MetaSR(nn.Module):
+class MetaSR(DecoderBase):
 
     def __init__(self, encoder, hidden_dim=256):
         super().__init__()
