@@ -4,6 +4,7 @@ from pytorch_msssim import ssim
 import torch
 
 class Evalutaion:
+    @staticmethod
     def PSNR(sr, hr, dataset=None, scale=1, rgb_range=1):
         diff = (sr - hr) / rgb_range
         if dataset is not None:
@@ -23,10 +24,12 @@ class Evalutaion:
         mse = valid.pow(2).mean()
         return -10 * torch.log10(mse)
 
+    @staticmethod
     def SSIM(sr, hr, dataset=None, scale=1, rgb_range=1):
         sr, hr = ImageProcessor.PreprocessingForScoring(sr, hr, dataset, scale, rgb_range)
         return ssim(sr, hr, data_range=1.0, size_average=True)
 
+    @staticmethod
     def GetEvaluationScores(sr, hr, dataset=None, scale=1, rgb_range=1):
         sr, hr = ImageProcessor.PreprocessingForScoring(sr, hr, dataset, scale, rgb_range)
         return ScoreEvaluations(sr, hr)

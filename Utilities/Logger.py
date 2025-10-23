@@ -11,6 +11,7 @@ class Logger:
     def get_log_path(cls):
         return cls._log_path
 
+    @staticmethod
     def TimeToLogText(t):
         if t >= 3600:
             return '{:.1f}h'.format(t / 3600)
@@ -19,6 +20,7 @@ class Logger:
         else:
             return '{:.1f}s'.format(t)
         
+    @staticmethod
     def Log(obj, filename='log.txt'):
         print(obj)
         if Logger._log_path is not None:
