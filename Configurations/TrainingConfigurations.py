@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from Configurations.TrainingDataConfigurations import TrainingDataConfigurations
 from Configurations.ValidationDataConfigurations import ValidationDataConfigurations
-from Decoders.DecoderBase import DecoderBase
-from Encoders.EncoderBase import EncoderBase
 
 @dataclass
 class TrainingConfigurations:

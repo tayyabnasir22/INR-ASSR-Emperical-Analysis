@@ -14,7 +14,7 @@ class PipelineBase(ABC):
         pass
 
     @abstractmethod
-    def InitTrainingSettings(self, ):
+    def InitSettings(self, ):
         pass
 
     @abstractmethod

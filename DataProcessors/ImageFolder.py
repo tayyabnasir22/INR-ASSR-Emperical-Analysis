@@ -10,11 +10,11 @@ class ImageFolder(FolderReaderBase):
                  repeat=1):
         self.repeat = repeat
 
-        filenames = sorted(os.listdir(root_path))
+        file_names = sorted(os.listdir(root_path))
         
         self.files = []
-        for filename in filenames:
-            file = os.path.join(root_path, filename)
+        for file_name in file_names:
+            file = os.path.join(root_path, file_name)
 
             self.files.append(file)
 
