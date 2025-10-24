@@ -9,3 +9,12 @@ class Timer():
 
     def Elapsed(self):
         return time.time() - self.start
+    
+    @staticmethod
+    def ConvertTimeToText(t):
+        if t >= 3600:
+            return '{:.1f}h'.format(t / 3600)
+        elif t >= 60:
+            return '{:.1f}m'.format(t / 60)
+        else:
+            return '{:.1f}s'.format(t)

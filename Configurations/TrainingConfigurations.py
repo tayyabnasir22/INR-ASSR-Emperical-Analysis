@@ -13,3 +13,4 @@ class TrainingConfigurations:
     resume_path: str
     epoch_val: int
     epoch_save: int
+    monitor_metric: str
