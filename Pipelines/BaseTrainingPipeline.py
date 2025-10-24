@@ -11,6 +11,7 @@ from Utilities.Evaluation import Evalutaion
 from Utilities.ModelAttributesManager import ModelAttributesManager
 from torch.optim.optimizer import Optimizer
 import torch.nn as nn
+import torch
 
 class BaseTrainingPipeline(PipelineBase):
     def __init__(self):
@@ -51,6 +52,7 @@ class BaseTrainingPipeline(PipelineBase):
                 benchmark_type=BenchmarkType.DIV2K, 
                 eval_batch_size=100, 
                 eval_scale=4,
+                base_folder2='',
             ),
             lr_schedular={'milestones': [200, 400, 600, 800], 'gamma': 0.5},
             epochs=1000,

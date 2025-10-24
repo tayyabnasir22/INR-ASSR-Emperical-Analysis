@@ -8,3 +8,4 @@ class ValidationDataConfigurations(TrainingDataConfigurations):
     benchmark_type: BenchmarkType
     eval_batch_size: int
     eval_scale: int
+    base_folder2: str
