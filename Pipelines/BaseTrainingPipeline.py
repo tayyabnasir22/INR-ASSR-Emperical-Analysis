@@ -13,6 +13,16 @@ from torch.optim.optimizer import Optimizer
 import torch.nn as nn
 
 class BaseTrainingPipeline(PipelineBase):
+    def __init__(self):
+        self._trian_data_path = './datasets/DIV2K_trin_HR'
+        self._valid_data_path = './datasets/DIV2K_valid_HR'
+        self._model_save_path = './model_states'
+        self._model_load_path = './model_states/last.pth'
+        self._batch_Size = 32
+        self._train_repeat = 40
+        self._patch_size_train = 48
+        self._patch_size_valid = 48
+
     def InitModel(self, model: nn.Module):
         self.model = model
 
@@ -20,20 +30,20 @@ class BaseTrainingPipeline(PipelineBase):
         self.configurations = TrainingConfigurations(
             optimizer={'learning_rate': 4.e-4},
             data_configurations=TrainingDataConfigurations(
-                patch_size=48, 
+                patch_size=self._patch_size_train, 
                 augment=True, 
-                batch_size=32, 
-                base_folder='./datasets/DIV2K_trin_HR', 
-                repeat=40, 
+                batch_size=self._batch_Size, 
+                base_folder=self._trian_data_path, 
+                repeat=self._train_repeat, 
                 scale_range=[1,4], 
                 input_nomrlizer_range=NormalizerRange(), 
                 total_examples=800,
             ),
             validation_data_configurations=ValidationDataConfigurations(
-                patch_size=48, 
+                patch_size=self._patch_size_valid, 
                 augment=False, 
                 batch_size=1, 
-                base_folder='./datasets/DIV2K_valid_HR', 
+                base_folder=self._valid_data_path, 
                 repeat=1, 
                 scale_range=[4,4], 
                 input_nomrlizer_range=NormalizerRange(), 
@@ -44,8 +54,8 @@ class BaseTrainingPipeline(PipelineBase):
             ),
             lr_schedular={'milestones': [200, 400, 600, 800], 'gamma': 0.5},
             epochs=1000,
-            save_path='./model_states',
-            resume_path='./model_states',
+            save_path=self._model_save_path,
+            resume_path=self._model_load_path,
             epoch_val=10,
             epoch_save=10,
             monitor_metric='psnr',
