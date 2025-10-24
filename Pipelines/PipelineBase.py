@@ -1,6 +1,11 @@
 from abc import ABC, abstractmethod
+import torch.nn as nn
 
 class PipelineBase(ABC):
+    @abstractmethod
+    def InitModel(self, model: nn.Module):
+        self.model = model
+
     @abstractmethod
     def LoadConfigurations(self,):
         pass
@@ -14,7 +19,7 @@ class PipelineBase(ABC):
         pass
 
     @abstractmethod
-    def InitSettings(self, ):
+    def InitTrainingRecipe(self, ):
         pass
 
     @abstractmethod
