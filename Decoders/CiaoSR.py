@@ -56,7 +56,7 @@ class CiaoSR(DecoderBase):
 
         _, h, w, _ = coord.shape
         
-        resCon = F.grid_sample(self.inp, coord.flip(-1), mode='bilinear', padding_mode='border', align_corners=False)
+        res_con = F.grid_sample(self.inp, coord.flip(-1), mode='bilinear', padding_mode='border', align_corners=False)
 
         coord = coord.view(B, h*w, 2)
 
@@ -146,7 +146,7 @@ class CiaoSR(DecoderBase):
         result = result.view(bs, h, w, 3).permute(0, 3, 1, 2)    # [B, C, H, W]
 
 
-        ret = result + resCon
+        ret = result + res_con
 
         return ret
 

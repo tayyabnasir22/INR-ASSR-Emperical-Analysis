@@ -1,5 +1,7 @@
 from torch.optim import Adam, MultiStepLR, CosineAnnealingWarmRestarts
 import numpy as np
+import os
+import torch
 
 class ModelAttributesManager:
     @staticmethod
@@ -29,3 +31,13 @@ class ModelAttributesManager:
         # TODO see how this can be managed
         optimizer.lr = 2.e-6
         return CosineAnnealingWarmRestarts(optimizer, t_zero, t_mult, lr_min, last_epoch)
+    
+    @staticmethod
+    def SaveModel(model, optimizer, epoch: int, save_path: str, save_name):
+        sv_file = {
+            'model': model.state_dict(),
+            'optimizer': optimizer.state_dict(),
+            'epoch': epoch
+        }
+
+        torch.save(sv_file, os.path.join(save_path, save_name + '.pth'))

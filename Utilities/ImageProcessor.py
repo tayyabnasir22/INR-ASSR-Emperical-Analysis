@@ -1,3 +1,4 @@
+from Configurations.BenchmarkType import BenchmarkType
 from Utilities.CoordinateManager import CoordinateManager
 import torch
 from torchvision import transforms
@@ -17,9 +18,9 @@ class ImageProcessor:
         if dataset is not None:
             # For benchmark datasets (like Set5, Set14), 
             # crop 'scale' pixels from each border to avoid boundary effects
-            if dataset == 'benchmark':
+            if dataset == BenchmarkType.BENCHMARK:
                 shave = scale
-            elif dataset == 'div2k':
+            elif dataset == BenchmarkType.DIV2K:
                 # For DIV2K dataset, crop 'scale+6' pixels from border
                 # (DIV2K convention for fair evaluation)
                 shave = scale + 6
@@ -54,9 +55,9 @@ class ImageProcessor:
         if dataset is not None:
             # For benchmark datasets (like Set5, Set14), 
             # crop 'scale' pixels from each border to avoid boundary effects
-            if dataset == 'benchmark':
+            if dataset == BenchmarkType.BENCHMARK:
                 shave = scale
-            elif dataset == 'div2k':
+            elif dataset == BenchmarkType.DIV2K:
                 # For DIV2K dataset, crop 'scale+6' pixels from border
                 # (DIV2K convention for fair evaluation)
                 shave = scale + 6

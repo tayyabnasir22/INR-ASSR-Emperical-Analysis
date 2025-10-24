@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from Configurations.BenchmarkType import BenchmarkTypes
+from Configurations.BenchmarkType import BenchmarkType
 from Configurations.TrainingDataConfigurations import TrainingDataConfigurations
 
 @dataclass
 class ValidationDataConfigurations(TrainingDataConfigurations):
-    benchmark_type: BenchmarkTypes
+    benchmark_type: BenchmarkType
     eval_batch_size: int
     eval_scale: int

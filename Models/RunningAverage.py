@@ -1,12 +1,12 @@
 class RunningAverage():
 
     def __init__(self):
-        self.n = 0.0
-        self.v = 0.0
+        self.samples = 0.0
+        self.values = 0.0
 
     def add(self, v, n=1.0):
-        self.v = (self.v * self.n + v * n) / (self.n + n)
-        self.n += n
+        self.values = (self.values * self.samples + v * n) / (self.samples + n)
+        self.samples += n
 
     def item(self):
-        return self.v
+        return self.values
