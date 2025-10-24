@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from Pipelines.PipelineBase import PipelineBase
 
-class BaseModelFactory(ABC):
+class BaseTrainingFactory(ABC):
     @abstractmethod
     def BuildModel(self,) -> PipelineBase:
         pass
