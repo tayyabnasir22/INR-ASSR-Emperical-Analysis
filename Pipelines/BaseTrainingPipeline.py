@@ -17,7 +17,7 @@ class BaseTrainingPipeline(PipelineBase):
         self.model = model
 
     def LoadConfigurations(self,):
-        self.training_configurations = TrainingConfigurations(
+        self.configurations = TrainingConfigurations(
             optimizer={'learning_rate': 4.e-4},
             data_configurations=TrainingDataConfigurations(
                 patch_size=48, 
@@ -54,29 +54,29 @@ class BaseTrainingPipeline(PipelineBase):
     def CreateDataLoaders(self,):
         self.training_data_loader = SRImplicitDownsampled(
             dataset=ImageFolder(
-                self.training_configurations.data_configurations.base_folder, 
-                self.training_configurations.data_configurations.repeat
+                self.configurations.data_configurations.base_folder, 
+                self.configurations.data_configurations.repeat
             ),
-            inp_size=self.training_configurations.data_configurations.patch_size,
-            scale_min=self.training_configurations.data_configurations.scale_range[0],
-            scale_max=self.training_configurations.data_configurations.scale_range[1],
-            augment=self.training_configurations.data_configurations.augment
+            inp_size=self.configurations.data_configurations.patch_size,
+            scale_min=self.configurations.data_configurations.scale_range[0],
+            scale_max=self.configurations.data_configurations.scale_range[1],
+            augment=self.configurations.data_configurations.augment
         )
         self.validation_data_loader = SRImplicitDownsampled(
             dataset=ImageFolder(
-                self.training_configurations.validation_data_configurations.base_folder, 
-                self.training_configurations.validation_data_configurations.repeat
+                self.configurations.validation_data_configurations.base_folder, 
+                self.configurations.validation_data_configurations.repeat
             ),
-            inp_size=self.training_configurations.validation_data_configurations.patch_size,
-            scale_min=self.training_configurations.validation_data_configurations.scale_range[0],
-            scale_max=self.training_configurations.validation_data_configurations.scale_range[1],
-            augment=self.training_configurations.validation_data_configurations.augment
+            inp_size=self.configurations.validation_data_configurations.patch_size,
+            scale_min=self.configurations.validation_data_configurations.scale_range[0],
+            scale_max=self.configurations.validation_data_configurations.scale_range[1],
+            augment=self.configurations.validation_data_configurations.augment
         )
 
     def LoadModelWeights(self, ):
         self.saved_model = None
-        if os.path.exists(self.training_configurations.resume_path):
-            self.saved_model = torch.load(self.training_configurations.resume_path)
+        if os.path.exists(self.configurations.resume_path):
+            self.saved_model = torch.load(self.configurations.resume_path)
             self.model.load_state_dict(self.saved_model['model'])
 
     def InitTrainingRecipe(self, ):
@@ -85,12 +85,12 @@ class BaseTrainingPipeline(PipelineBase):
 
         # 2. Create/Load the optimizer
         if self.saved_model is not None:
-            self.optimizer: Optimizer = ModelAttributesManager.CreateAdamOptimizer(self.model.parameters(), self.saved_model['optimizer'], self.training_configurations.optimizer['learning_rate'], load_sd=True)
+            self.optimizer: Optimizer = ModelAttributesManager.CreateAdamOptimizer(self.model.parameters(), self.saved_model['optimizer'], self.configurations.optimizer['learning_rate'], load_sd=True)
         else:
-            self.optimizer: Optimizer = ModelAttributesManager.CreateAdamOptimizer(self.model.parameters(), None ,self.training_configurations.optimizer['learning_rate'], load_sd=False)
+            self.optimizer: Optimizer = ModelAttributesManager.CreateAdamOptimizer(self.model.parameters(), None ,self.configurations.optimizer['learning_rate'], load_sd=False)
 
         # 3. Create/Load the LR Schedular
-        self.lr_schedular = ModelAttributesManager.CreateMultiStepLRSchedular(self.optimizer, self.training_configurations.lr_schedular['milestones'], self.training_configurations.lr_schedular['gamma'], self.start_epoch)
+        self.lr_schedular = ModelAttributesManager.CreateMultiStepLRSchedular(self.optimizer, self.configurations.lr_schedular['milestones'], self.configurations.lr_schedular['gamma'], self.start_epoch)
 
     def InitModelObjectives(self, ):
         self.loss = nn.L1Loss()

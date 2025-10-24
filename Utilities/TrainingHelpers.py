@@ -67,16 +67,16 @@ class TrainingHelpers:
     def Validation(model, pipeline: BaseTrainingPipeline, log_info: list, epoch: int, max_validation_metric: float):
         validation_metrics: dict = PredictionHelpers.EvaluateForTrainigData(
             pipeline.validation_data_loader, model, 
-            pipeline.training_configurations.validation_data_configurations.input_nomrlizer_range, 
-            pipeline.training_configurations.validation_data_configurations.eval_batch_size, 
-            pipeline.training_configurations.validation_data_configurations.eval_scale, 
-            pipeline.training_configurations.validation_data_configurations.benchmark_type.value
+            pipeline.configurations.validation_data_configurations.input_nomrlizer_range, 
+            pipeline.configurations.validation_data_configurations.eval_batch_size, 
+            pipeline.configurations.validation_data_configurations.eval_scale, 
+            pipeline.configurations.validation_data_configurations.benchmark_type.value
         )
 
         for key, value in validation_metrics.items():
             log_info.append('Validation ' + key + '= {:.4f}'.format(value))
-        if validation_metrics[pipeline.training_configurations.monitor_metric] >= max_validation_metric:
-            ModelAttributesManager.SaveModel(model, pipeline.optimizer, epoch, pipeline.training_configurations.save_path, 'best')
+        if validation_metrics[pipeline.configurations.monitor_metric] >= max_validation_metric:
+            ModelAttributesManager.SaveModel(model, pipeline.optimizer, epoch, pipeline.configurations.save_path, 'best')
 
     @staticmethod
     def Train(pipeline: BaseTrainingPipeline, writer: SummaryWriter, n_gpus: int, allow_multi_gpu: bool = True):
@@ -89,15 +89,15 @@ class TrainingHelpers:
         max_validation_metric = -1e18
 
         # 3. Train the model for the required epochs
-        for epoch in range(pipeline.start_epoch, pipeline.training_configurations.epochs + 1):
+        for epoch in range(pipeline.start_epoch, pipeline.configurations.epochs + 1):
             # 3.1. Start logging the epoch
             epoch_start = timer.Elapsed()
-            log_info = ['epoch {}/{}'.format(epoch, pipeline.training_configurations.epochs)]
+            log_info = ['epoch {}/{}'.format(epoch, pipeline.configurations.epochs)]
 
             writer.add_scalar('lr', pipeline.optimizer.param_groups[0]['lr'], epoch)
 
             # 3.2. Run the training steps for the epoch, and get loss
-            loss = TrainingHelpers.RunEpoch(pipeline.model, pipeline.training_data_loader, pipeline.optimizer, pipeline.loss, pipeline.metrics, epoch, pipeline.training_configurations, writer)
+            loss = TrainingHelpers.RunEpoch(pipeline.model, pipeline.training_data_loader, pipeline.optimizer, pipeline.loss, pipeline.metrics, epoch, pipeline.configurations, writer)
 
             # 3.3. Adjust the learning rate
             pipeline.lr_schedular.step()
@@ -112,18 +112,18 @@ class TrainingHelpers:
                 model_ = pipeline.model
 
             # 3.6. Save the current epoch model
-            ModelAttributesManager.SaveModel(model_, pipeline.optimizer, epoch, pipeline.training_configurations.save_path, 'last')
+            ModelAttributesManager.SaveModel(model_, pipeline.optimizer, epoch, pipeline.configurations.save_path, 'last')
 
             # 3.7. Save model if required for this epoch
-            if epoch % pipeline.training_configurations.epoch_save == 0:
-                ModelAttributesManager.SaveModel(model_, pipeline.optimizer, epoch, pipeline.training_configurations.save_path, 'epoch_' + str(epoch))
+            if epoch % pipeline.configurations.epoch_save == 0:
+                ModelAttributesManager.SaveModel(model_, pipeline.optimizer, epoch, pipeline.configurations.save_path, 'epoch_' + str(epoch))
 
             # 3.8. Incase validation needs to be run for this epoch
-            if epoch % pipeline.training_configurations.epoch_val == 0:
+            if epoch % pipeline.configurations.epoch_val == 0:
                 TrainingHelpers.Validation(model_, pipeline, log_info, epoch, max_validation_metric)
 
             # 3.9. Print Epoch time, Total time spent so far, and time left for training completion
-            progress = (epoch - pipeline.start_epoch + 1) / (pipeline.training_configurations.epochs - pipeline.start_epoch + 1)
+            progress = (epoch - pipeline.start_epoch + 1) / (pipeline.configurations.epochs - pipeline.start_epoch + 1)
             elapsed_total = timer.Elapsed()
             log_info.append('{} {}/{}'.format(
                     Timer.ConvertTimeToText(elapsed_total - epoch_start), 

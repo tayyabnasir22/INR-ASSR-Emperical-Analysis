@@ -15,5 +15,5 @@ class EDSR_LIIF_SimpleTrainer(BaseTrainer):
         factory.BuildModel(pipeline)
 
         # 3. Call the training
-        writer = SummaryWriter(os.path.join(pipeline.training_configurations.save_path, 'tensorboard'))
+        writer = SummaryWriter(os.path.join(pipeline.configurations.save_path, 'tensorboard'))
         TrainingHelpers.Train(pipeline, writer, 0, False)
