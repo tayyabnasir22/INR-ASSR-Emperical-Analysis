@@ -1,4 +1,5 @@
-from torch.optim import Adam, MultiStepLR, CosineAnnealingWarmRestarts
+from torch.optim import Adam
+from torch.optim.lr_scheduler import MultiStepLR, CosineAnnealingWarmRestarts
 import numpy as np
 import os
 import torch
@@ -23,11 +24,11 @@ class ModelAttributesManager:
         return optimizer
     
     @staticmethod
-    def CreateMultiStepLRSchedular(optimizer, milestones: list[int], gamma: float, last_epoch: int = -1):
+    def CreateMultiStepLRScheduler(optimizer, milestones: list[int], gamma: float, last_epoch: int = -1):
         return MultiStepLR(optimizer, milestones, gamma, last_epoch)
     
     @staticmethod
-    def CreateSGDRSchedular(optimizer, t_zero: int = 50, t_mult: int = 1, lr_min: float = 2.e-6, last_epoch: int = -1):
+    def CreateSGDRScheduler(optimizer, t_zero: int = 50, t_mult: int = 1, lr_min: float = 2.e-6, last_epoch: int = -1):
         # TODO see how this can be managed
         optimizer.lr = 2.e-6
         return CosineAnnealingWarmRestarts(optimizer, t_zero, t_mult, lr_min, last_epoch)

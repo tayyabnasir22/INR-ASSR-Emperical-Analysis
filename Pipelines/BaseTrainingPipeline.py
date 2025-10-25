@@ -54,7 +54,7 @@ class BaseTrainingPipeline(PipelineBase):
                 eval_scale=4,
                 base_folder2='',
             ),
-            lr_schedular={'milestones': [200, 400, 600, 800], 'gamma': 0.5},
+            lr_scheduler={'milestones': [200, 400, 600, 800], 'gamma': 0.5},
             epochs=1000,
             save_path=self._model_save_path,
             resume_path=self._model_load_path,
@@ -101,8 +101,8 @@ class BaseTrainingPipeline(PipelineBase):
         else:
             self.optimizer: Optimizer = ModelAttributesManager.CreateAdamOptimizer(self.model.parameters(), None ,self.configurations.optimizer['learning_rate'], load_sd=False)
 
-        # 3. Create/Load the LR Schedular
-        self.lr_schedular = ModelAttributesManager.CreateMultiStepLRSchedular(self.optimizer, self.configurations.lr_schedular['milestones'], self.configurations.lr_schedular['gamma'], self.start_epoch)
+        # 3. Create/Load the LR Scheduler
+        self.lr_scheduler = ModelAttributesManager.CreateMultiStepLRScheduler(self.optimizer, self.configurations.lr_scheduler['milestones'], self.configurations.lr_scheduler['gamma'], self.start_epoch)
 
     def InitModelObjectives(self, ):
         self.loss = nn.L1Loss()

@@ -100,7 +100,7 @@ class TrainingHelpers:
             loss = TrainingHelpers.RunEpoch(pipeline.model, pipeline.training_data_loader, pipeline.optimizer, pipeline.loss, pipeline.metrics, epoch, pipeline.configurations, writer)
 
             # 3.3. Adjust the learning rate
-            pipeline.lr_schedular.step()
+            pipeline.lr_scheduler.step()
 
             # 3.4. Log loss and lr info
             log_info.append('train: loss={:.4f} lr={:.4f}'.format(loss, pipeline.optimizer.param_groups[0]['lr']))

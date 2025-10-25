@@ -7,7 +7,7 @@ class TrainingConfigurations:
     optimizer: dict
     data_configurations: TrainingDataConfigurations
     validation_data_configurations: ValidationDataConfigurations
-    lr_schedular: dict
+    lr_scheduler: dict
     epochs: int
     save_path: str
     resume_path: str
