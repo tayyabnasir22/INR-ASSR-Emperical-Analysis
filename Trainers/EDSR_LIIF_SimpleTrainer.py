@@ -1,4 +1,4 @@
-from ModelFactories.EDSR_LIIF_Factory import EDSR_LIIF_Factory
+from TrainingFactories.EDSR_LIIF_Factory import EDSR_LIIF_Factory
 from Pipelines.BaseTrainingPipeline import BaseTrainingPipeline
 from Trainers.BaseTrainer import BaseTrainer
 from Utilities.TrainingHelpers import TrainingHelpers
