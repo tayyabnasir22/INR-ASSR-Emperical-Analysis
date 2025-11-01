@@ -1,6 +1,7 @@
 from Components.RDB import RDB
 from Encoders.EncoderBase import EncoderBase
 import torch
+import torch.nn as nn
 
 class RDN(EncoderBase):
     def __init__(self, G0=64, RDNkSize=3, RDNconfig='B',

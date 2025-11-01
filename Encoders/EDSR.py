@@ -2,6 +2,7 @@ from Components.EDSRUpsampler import EDSRUpsampler
 from Components.MeanShift import MeanShift
 from Components.ResBlock import ResBlock
 from Encoders.EncoderBase import EncoderBase
+import torch.nn as nn
 
 class EDSR(EncoderBase):
     def default_conv(self, in_channels, out_channels, kernel_size, bias=True):

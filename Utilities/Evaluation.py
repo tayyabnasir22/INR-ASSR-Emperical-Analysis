@@ -19,6 +19,6 @@ class Evalutaion:
         return ssim(diff_sr, diff_hr, data_range=1.0, size_average=True)
 
     @staticmethod
-    def GetEvaluationScores(sr, hr, dataset=None, scale=1, rgb_range=1):
+    def GetEvaluationScores(sr, hr, lpips_model, dataset=None, scale=1, rgb_range=1):
         sr, hr = ImageProcessor.PreprocessingForScoring(sr, hr, dataset, scale, rgb_range)
-        return ScoreEvaluations(sr, hr)
+        return ScoreEvaluations(sr, hr, lpips_model)

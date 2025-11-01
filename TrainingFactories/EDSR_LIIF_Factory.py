@@ -1,9 +1,9 @@
 from Decoders.LIIF import LIIF
 from Encoders.EDSR import EDSR
-from ModelFactories.BaseModelFactory import BaseModelFactory
+from TrainingFactories.BaseTrainingFactory import BaseTrainingFactory
 from Pipelines.PipelineBase import PipelineBase
 
-class EDSR_LIIF_Factory(BaseModelFactory):
+class EDSR_LIIF_Factory(BaseTrainingFactory):
     def BuildModel(self, pipeline: PipelineBase) -> PipelineBase:
         # Create the ecnoder and decoder
         encoder = EDSR()
