@@ -1,16 +1,14 @@
-from Configurations.BenchmarkType import BenchmarkType
-from Configurations.NormalizerRange import NormalizerRange
+from Models.BenchmarkType import BenchmarkType
+from Models.NormalizerRange import NormalizerRange
 from Configurations.ValidationConfigurations import ValidationConfigurations
 from Configurations.ValidationDataConfigurations import ValidationDataConfigurations
-from DataProcessors.ImageFolder import ImageFolder
 from DataProcessors.PairedImageFolder import PairedImageFolders
-from DataProcessors.SRImplicitDownsampled import SRImplicitDownsampled
 from DataProcessors.SRImplicitPaired import SRImplicitPaired
 from Pipelines.PipelineBase import PipelineBase
 import torch.nn as nn
 import torch
 
-class BaseTestingPipeline(PipelineBase):
+class BaseTestingPairedPipeline(PipelineBase):
     def __init__(self):
         self._valid_data_path = './datasets/DIV2K_valid_HR'
         self._valid_data_pathScale = './datasets/DIV2K_valid_HR'

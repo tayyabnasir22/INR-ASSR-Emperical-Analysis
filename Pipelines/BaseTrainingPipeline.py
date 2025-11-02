@@ -1,6 +1,6 @@
 import os
-from Configurations.BenchmarkType import BenchmarkType
-from Configurations.NormalizerRange import NormalizerRange
+from Models.BenchmarkType import BenchmarkType
+from Models.NormalizerRange import NormalizerRange
 from Configurations.TrainingConfigurations import TrainingConfigurations
 from Configurations.TrainingDataConfigurations import TrainingDataConfigurations
 from Configurations.ValidationDataConfigurations import ValidationDataConfigurations
@@ -97,12 +97,27 @@ class BaseTrainingPipeline(PipelineBase):
 
         # 2. Create/Load the optimizer
         if self.saved_model is not None:
-            self.optimizer: Optimizer = ModelAttributesManager.CreateAdamOptimizer(self.model.parameters(), self.saved_model['optimizer'], self.configurations.optimizer['learning_rate'], load_sd=True)
+            self.optimizer: Optimizer = ModelAttributesManager.CreateAdamOptimizer(
+                self.model.parameters(), 
+                self.saved_model['optimizer'], 
+                self.configurations.optimizer['learning_rate'], 
+                load_sd=True
+            )
         else:
-            self.optimizer: Optimizer = ModelAttributesManager.CreateAdamOptimizer(self.model.parameters(), None ,self.configurations.optimizer['learning_rate'], load_sd=False)
+            self.optimizer: Optimizer = ModelAttributesManager.CreateAdamOptimizer(
+                self.model.parameters(), 
+                None,
+                self.configurations.optimizer['learning_rate'], 
+                load_sd=False
+            )
 
         # 3. Create/Load the LR Scheduler
-        self.lr_scheduler = ModelAttributesManager.CreateMultiStepLRScheduler(self.optimizer, self.configurations.lr_scheduler['milestones'], self.configurations.lr_scheduler['gamma'], self.start_epoch)
+        self.lr_scheduler = ModelAttributesManager.CreateMultiStepLRScheduler(
+            self.optimizer, 
+            self.configurations.lr_scheduler['milestones'], 
+            self.configurations.lr_scheduler['gamma'], 
+            self.start_epoch
+        )
 
     def InitModelObjectives(self, ):
         self.loss = nn.L1Loss()

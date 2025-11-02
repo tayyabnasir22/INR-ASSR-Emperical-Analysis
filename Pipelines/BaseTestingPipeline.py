@@ -1,11 +1,9 @@
-from Configurations.BenchmarkType import BenchmarkType
-from Configurations.NormalizerRange import NormalizerRange
+from Models.BenchmarkType import BenchmarkType
+from Models.NormalizerRange import NormalizerRange
 from Configurations.ValidationConfigurations import ValidationConfigurations
 from Configurations.ValidationDataConfigurations import ValidationDataConfigurations
 from DataProcessors.ImageFolder import ImageFolder
-from DataProcessors.PairedImageFolder import PairedImageFolders
 from DataProcessors.SRImplicitDownsampled import SRImplicitDownsampled
-from DataProcessors.SRImplicitPaired import SRImplicitPaired
 from Pipelines.PipelineBase import PipelineBase
 import torch.nn as nn
 import torch
@@ -47,7 +45,6 @@ class BaseTestingPipeline(PipelineBase):
         self.validation_data_loader = SRImplicitDownsampled(
             dataset=ImageFolder(
                 self.configurations.data_configurations.base_folder, 
-                self.configurations.data_configurations.base_folder2,
             ),
             inp_size=None,
             scale_min=self.configurations.data_configurations.eval_scale,
