@@ -28,9 +28,14 @@ class SRNO(DecoderBase):
         feat = (self.feat)
         grid = 0
 
-        pos_lr = CoordinateManager.CreateCoordinates(feat.shape[-2:], flatten=False).cuda() \
-            .permute(2, 0, 1) \
-            .unsqueeze(0).expand(feat.shape[0], 2, *feat.shape[-2:])
+        pos_lr = CoordinateManager.CreateCoordinates(
+            feat.shape[-2:], 
+            flatten=False
+        ).cuda().permute(2, 0, 1).unsqueeze(0).expand(
+            feat.shape[0], 
+            2, 
+            *feat.shape[-2:]
+        )
 
         rx = 2 / feat.shape[-2] / 2
         ry = 2 / feat.shape[-1] / 2
@@ -49,9 +54,19 @@ class SRNO(DecoderBase):
                 coord_[:, :, :, 1] += vy * ry + eps_shift
                 coord_.clamp_(-1 + 1e-6, 1 - 1e-6)
 
-                feat_ = F.grid_sample(feat, coord_.flip(-1), mode='nearest', align_corners=False)
+                feat_ = F.grid_sample(
+                    feat, 
+                    coord_.flip(-1), 
+                    mode='nearest', 
+                    align_corners=False
+                )
 
-                old_coord = F.grid_sample(pos_lr, coord_.flip(-1), mode='nearest', align_corners=False)
+                old_coord = F.grid_sample(
+                    pos_lr, 
+                    coord_.flip(-1), 
+                    mode='nearest', 
+                    align_corners=False
+                )
                 rel_coord = coord.permute(0, 3, 1, 2) - old_coord
                 rel_coord[:, 0, :, :] *= feat.shape[-2]
                 rel_coord[:, 1, :, :] *= feat.shape[-1]
@@ -73,8 +88,19 @@ class SRNO(DecoderBase):
         for index, area in enumerate(areas):
             feat_s[index] = feat_s[index] * (area / tot_area).unsqueeze(1)
          
-        grid = torch.cat([*rel_coords, *feat_s, \
-            rel_cell.unsqueeze(-1).unsqueeze(-1).repeat(1,1,coord.shape[1],coord.shape[2])],dim=1)
+        grid = torch.cat(
+            [
+                *rel_coords, 
+                *feat_s,
+                rel_cell.unsqueeze(-1).unsqueeze(-1).repeat(
+                    1,
+                    1,
+                    coord.shape[1],
+                    coord.shape[2]
+                )
+            ],
+            dim=1
+        )
 
         x = self.conv00(grid)
         x = self.conv0(x, 0)
@@ -84,8 +110,13 @@ class SRNO(DecoderBase):
         ret = self.fc2(F.gelu(self.fc1(feat)))
         
 
-        ret = ret + F.grid_sample(self.inp, coord.flip(-1), mode='bilinear',\
-                                padding_mode='border', align_corners=False)
+        ret = ret + F.grid_sample(
+            self.inp, 
+            coord.flip(-1), 
+            mode='bilinear',
+            padding_mode='border', 
+            align_corners=False
+        )
         return ret
 
     def forward(self, inp, coord, cell):

@@ -16,9 +16,11 @@ class HIIF(DecoderBase):
         self.n_hi_layers = 6
         self.fc_layers = nn.ModuleList(
             [
-                HIIF_MLP(hidden_dim * 4 + 2 + 2 if d == 0 else hidden_dim + 2,
-                                  3 if d == self.n_hi_layers - 1 else hidden_dim,256) \
-                for d in range(self.n_hi_layers)
+                HIIF_MLP(
+                    hidden_dim * 4 + 2 + 2 if d == 0 else hidden_dim + 2,
+                    3 if d == self.n_hi_layers - 1 else hidden_dim,
+                    256
+                ) for d in range(self.n_hi_layers)
             ]
         )
 
@@ -35,9 +37,14 @@ class HIIF(DecoderBase):
         feat = (self.feat)
         grid = 0
 
-        pos_lr = CoordinateManager.CreateCoordinates(feat.shape[-2:], flatten=False).cuda() \
-            .permute(2, 0, 1) \
-            .unsqueeze(0).expand(feat.shape[0], 2, *feat.shape[-2:])
+        pos_lr = CoordinateManager.CreateCoordinates(
+            feat.shape[-2:], 
+            flatten=False
+        ).cuda().permute(2, 0, 1).unsqueeze(0).expand(
+            feat.shape[0], 
+            2, 
+            *feat.shape[-2:]
+        )
 
         rx = 2 / feat.shape[-2] / 2
         ry = 2 / feat.shape[-1] / 2
@@ -60,7 +67,11 @@ class HIIF(DecoderBase):
                 rel_coord = coord.permute(0, 3, 1, 2) - old_coord
                 rel_coord[:, 0, :, :] *= feat.shape[-2] / 2
                 rel_coord[:, 1, :, :] *= feat.shape[-1] / 2
-                rel_coord_n = rel_coord.permute(0, 2, 3, 1).reshape(rel_coord.shape[0], -1, rel_coord.shape[1])
+                rel_coord_n = rel_coord.permute(0, 2, 3, 1).reshape(
+                    rel_coord.shape[0], 
+                    -1, 
+                    rel_coord.shape[1]
+                )
 
                 area = torch.abs(rel_coord[:, 0, :, :] * rel_coord[:, 1, :, :])
                 areas.append(area + 1e-9)
@@ -87,7 +98,18 @@ class HIIF(DecoderBase):
         for index, area in enumerate(areas):
             preds[index] = preds[index] * (area / tot_area).unsqueeze(1)
 
-        grid = torch.cat([*preds, rel_cell.unsqueeze(-1).unsqueeze(-1).repeat(1, 1, coord.shape[1], coord.shape[2])], dim=1)
+        grid = torch.cat(
+            [
+                *preds, 
+                rel_cell.unsqueeze(-1).unsqueeze(-1).repeat(
+                    1, 
+                    1, 
+                    coord.shape[1], 
+                    coord.shape[2]
+                )
+            ], 
+            dim=1
+        )
 
         B, C_g, H, W = grid.shape
         grid = grid.permute(0, 2, 3, 1).reshape(B, H * W, C_g)
@@ -105,8 +127,14 @@ class HIIF(DecoderBase):
 
         result = x.permute(0, 2, 1).reshape(B, 3, H, W)
 
-        ret = result + F.grid_sample(self.inp, coord.flip(-1), mode='bilinear', \
-                                  padding_mode='border', align_corners=False)
+        ret = result + F.grid_sample(
+            self.inp, 
+            coord.flip(-1), 
+            mode='bilinear', 
+            padding_mode='border', 
+            align_corners=False
+        )
+        
         return ret
 
     def forward(self, inp, coord, cell):

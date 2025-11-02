@@ -4,8 +4,15 @@ import torch
 import torch.nn as nn
 
 class RDN(EncoderBase):
-    def __init__(self, G0=64, RDNkSize=3, RDNconfig='B',
-             scale=[2], no_upsampling=True, n_colors = 3):
+    def __init__(
+            self, 
+            G0=64, 
+            RDNkSize=3, 
+            RDNconfig='B',
+            scale=[2], 
+            no_upsampling=True, 
+            n_colors = 3
+        ):
         super(RDN, self).__init__()
 
         self.no_upsampling = no_upsampling
@@ -21,14 +28,27 @@ class RDN(EncoderBase):
         }[RDNconfig]
 
         # Shallow feature extraction net
-        self.SFENet1 = nn.Conv2d(n_colors, G0, kSize, padding=(kSize-1)//2, stride=1)
-        self.SFENet2 = nn.Conv2d(G0, G0, kSize, padding=(kSize-1)//2, stride=1)
+        self.SFENet1 = nn.Conv2d(
+            n_colors, 
+            G0, 
+            kSize, 
+            padding=(kSize-1)//2, 
+            stride=1
+        )
+
+        self.SFENet2 = nn.Conv2d(
+            G0, 
+            G0, 
+            kSize, 
+            padding=(kSize-1)//2, 
+            stride=1
+        )
 
         # Redidual dense blocks and dense feature fusion
         self.RDBs = nn.ModuleList()
         for i in range(self.D):
             self.RDBs.append(
-                RDB(growRate0 = G0, growRate = G, nConvLayers = C)
+                RDB(grow_rate_0 = G0, grow_rate = G, n_conv_layers = C)
             )
 
         # Global Feature Fusion

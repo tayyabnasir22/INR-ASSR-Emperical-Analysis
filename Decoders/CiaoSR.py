@@ -56,7 +56,13 @@ class CiaoSR(DecoderBase):
 
         _, h, w, _ = coord.shape
         
-        res_con = F.grid_sample(self.inp, coord.flip(-1), mode='bilinear', padding_mode='border', align_corners=False)
+        res_con = F.grid_sample(
+            self.inp, 
+            coord.flip(-1), 
+            mode='bilinear', 
+            padding_mode='border', 
+            align_corners=False
+        )
 
         coord = coord.view(B, h*w, 2)
 
@@ -69,12 +75,21 @@ class CiaoSR(DecoderBase):
         feat_v = torch.cat([feat_v, non_local_feat_v], dim=1) 
 
 
-        query = F.grid_sample(feat_q, coord.flip(-1).unsqueeze(1), mode='nearest', 
-                align_corners=False).permute(0, 3, 2, 1).contiguous()       #[16, 2304, 1, 576]
+        query = F.grid_sample(
+            feat_q, 
+            coord.flip(-1).unsqueeze(1), 
+            mode='nearest', 
+            align_corners=False
+        ).permute(0, 3, 2, 1).contiguous()       #[16, 2304, 1, 576]
 
-        pos_lr = CoordinateManager.CreateCoordinates(feat.shape[-2:], flatten=False).cuda() \
-            .permute(2, 0, 1) \
-            .unsqueeze(0).expand(feat.shape[0], 2, *feat.shape[-2:])
+        pos_lr = CoordinateManager.CreateCoordinates(
+            feat.shape[-2:], 
+            flatten=False
+        ).cuda().permute(2, 0, 1).unsqueeze(0).expand(
+            feat.shape[0], 
+            2, 
+            *feat.shape[-2:]
+        )
 
 
         rx = 2 / feat.shape[-2] / 2
@@ -92,12 +107,26 @@ class CiaoSR(DecoderBase):
                 coord_.clamp_(-1 + 1e-6, 1 - 1e-6)
 
                 # key and value
-                key = F.grid_sample(feat_k, coord_.flip(-1).unsqueeze(1), mode='nearest', align_corners=False)[:, :, 0, :].permute(0, 2, 1).contiguous()       #[16, 2304, 576]
-                value = F.grid_sample(feat_v, coord_.flip(-1).unsqueeze(1), mode='nearest', 
-                    align_corners=False)[:, :, 0, :].permute(0, 2, 1).contiguous()       #[16, 2304, 576]
+                key = F.grid_sample(
+                    feat_k, 
+                    coord_.flip(-1).unsqueeze(1), 
+                    mode='nearest', 
+                    align_corners=False
+                )[:, :, 0, :].permute(0, 2, 1).contiguous()       #[16, 2304, 576]
+                value = F.grid_sample(
+                    feat_v, 
+                    coord_.flip(-1).unsqueeze(1), 
+                    mode='nearest', 
+                    align_corners=False
+                )[:, :, 0, :].permute(0, 2, 1).contiguous()       #[16, 2304, 576]
 
                 #Interpolate K to HR resolution
-                coord_k = F.grid_sample(pos_lr, coord_.flip(-1).unsqueeze(1), mode='nearest', align_corners=False)[:, :, 0, :].permute(0, 2, 1).contiguous()     #[16, 2304, 2]
+                coord_k = F.grid_sample(
+                    pos_lr, 
+                    coord_.flip(-1).unsqueeze(1), 
+                    mode='nearest', 
+                    align_corners=False
+                )[:, :, 0, :].permute(0, 2, 1).contiguous()     #[16, 2304, 2]
                 
                 Q, K = coord, coord_k   #[16, 2304, 2]
 

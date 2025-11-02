@@ -39,9 +39,14 @@ class LTE(DecoderBase):
         freq = self.freq(feat) # frequency
         
         # prepare meta-data (coordinate)
-        pos_lr = CoordinateManager.CreateCoordinates(feat.shape[-2:], flatten=False).cuda() \
-            .permute(2, 0, 1) \
-            .unsqueeze(0).expand(feat.shape[0], 2, *feat.shape[-2:])
+        pos_lr = CoordinateManager.CreateCoordinates(
+            feat.shape[-2:], 
+            flatten=False
+        ).cuda().permute(2, 0, 1).unsqueeze(0).expand(
+            feat.shape[0], 
+            2, 
+            *feat.shape[-2:]
+        )
         
         # local ensemble loop
         rx = 2 / feat.shape[-2] / 2
@@ -60,11 +65,28 @@ class LTE(DecoderBase):
                 coord_.clamp_(-1 + 1e-6, 1 - 1e-6)
 
                 # coefficient & frequency prediction
-                coef_ = F.grid_sample(coef, coord_.flip(-1), mode='nearest', align_corners=False)
-                freq_ = F.grid_sample(freq, coord_.flip(-1), mode='nearest', align_corners=False)
+                coef_ = F.grid_sample(
+                    coef, 
+                    coord_.flip(-1), 
+                    mode='nearest', 
+                    align_corners=False
+                )
+
+                freq_ = F.grid_sample(
+                    freq, 
+                    coord_.flip(-1), 
+                    mode='nearest', 
+                    align_corners=False
+                )
 
                 # rel coord
-                rel_coord = F.grid_sample(pos_lr, coord_.flip(-1), mode='nearest', align_corners=False)
+                rel_coord = F.grid_sample(
+                    pos_lr,
+                    coord_.flip(-1),
+                    mode='nearest',
+                    align_corners=False
+                )
+
                 rel_coord = coord.permute(0, 3, 1, 2) - rel_coord
                 rel_coord[:, 0, :, :] *= feat.shape[-2]
                 rel_coord[:, 1, :, :] *= feat.shape[-1]
@@ -79,7 +101,13 @@ class LTE(DecoderBase):
                 freq_ = torch.mul(freq_, rel_coord.unsqueeze(1))
                 freq_ = torch.sum(freq_, dim=2)
                 freq_ += self.phase(rel_cell).unsqueeze(-1).unsqueeze(-1)
-                freq_ = torch.cat((torch.cos(np.pi*freq_), torch.sin(np.pi*freq_)), dim=1)
+                freq_ = torch.cat(
+                    (
+                        torch.cos(np.pi*freq_), 
+                        torch.sin(np.pi*freq_)
+                    ), 
+                    dim=1
+                )
 
                 # apply coefficeint to basis
                 coef_ = torch.mul(coef_, freq_)
@@ -100,8 +128,13 @@ class LTE(DecoderBase):
         ret = 0
         for pred, area in zip(preds, areas):
             ret = ret + pred * (area / tot_area).unsqueeze(1)
-        return ret + F.grid_sample(self.inp, coord.flip(-1), mode='bilinear',\
-                                padding_mode='border', align_corners=False)
+        return ret + F.grid_sample(
+            self.inp, 
+            coord.flip(-1), 
+            mode='bilinear',
+            padding_mode='border', 
+            align_corners=False
+        )
 
     def forward(self, inp, coord, cell):
         self.FeatureExtractor(inp)

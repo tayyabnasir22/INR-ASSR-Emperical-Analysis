@@ -35,11 +35,25 @@ class LIIF(DecoderBase):
 
         feat = self.feat
 
-        feat = F.unfold(feat, 3, padding=1).view(
-                feat.shape[0], feat.shape[1] * 9, feat.shape[2], feat.shape[3])
-        pos_lr = CoordinateManager.CreateCoordinates(feat.shape[-2:], flatten=False).cuda() \
-                    .permute(2, 0, 1) \
-                    .unsqueeze(0).expand(feat.shape[0], 2, *feat.shape[-2:])
+        feat = F.unfold(
+            feat, 
+            3, 
+            padding=1
+        ).view(
+            feat.shape[0], 
+            feat.shape[1] * 9, 
+            feat.shape[2], 
+            feat.shape[3]
+        )
+
+        pos_lr = CoordinateManager.CreateCoordinates(
+            feat.shape[-2:], 
+            flatten=False
+        ).cuda().permute(2, 0, 1).unsqueeze(0).expand(
+            feat.shape[0], 
+            2, 
+            *feat.shape[-2:]
+        )
 
         # local ensemble loop
         rx = 2 / feat.shape[-2] / 2
@@ -60,13 +74,18 @@ class LIIF(DecoderBase):
                 coord_[:, :, 1] += vy * ry + eps_shift
                 coord_.clamp_(-1 + 1e-6, 1 - 1e-6)
                 q_feat = F.grid_sample(
-                    feat, coord_.flip(-1).unsqueeze(1),
-                    mode='nearest', align_corners=False)[:, :, 0, :] \
-                    .permute(0, 2, 1)
+                    feat, 
+                    coord_.flip(-1).unsqueeze(1),
+                    mode='nearest', 
+                    align_corners=False
+                )[:, :, 0, :].permute(0, 2, 1)
+
                 q_coord = F.grid_sample(
-                    pos_lr, coord_.flip(-1).unsqueeze(1),
-                    mode='nearest', align_corners=False)[:, :, 0, :] \
-                    .permute(0, 2, 1)
+                    pos_lr, 
+                    coord_.flip(-1).unsqueeze(1),
+                    mode='nearest', 
+                    align_corners=False
+                )[:, :, 0, :].permute(0, 2, 1)
                 
                 rel_coord = coord - q_coord
                 rel_coord[:, :, 0] *= feat.shape[-2]
