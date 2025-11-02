@@ -5,11 +5,11 @@ class Logger:
     _log_path = None
     
     @classmethod
-    def set_log_path(cls, path):
+    def SetLogPath(cls, path):
         cls._log_path = path
 
     @classmethod
-    def get_log_path(cls):
+    def GetLogPath(cls):
         return cls._log_path
 
     @staticmethod

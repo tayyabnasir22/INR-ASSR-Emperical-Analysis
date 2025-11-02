@@ -4,12 +4,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class CiaoSR_CrossScaleAttention(nn.Module):
-    def default_conv(self, in_channels, out_channels, kernel_size,stride=1, bias=True):
+    def DefaultConv(self, in_channels, out_channels, kernel_size,stride=1, bias=True):
         return nn.Conv2d(
         in_channels, out_channels, kernel_size,
         padding=(kernel_size//2),stride=stride, bias=bias)
     
-    def same_padding(self, images, ksizes, strides, rates):
+    def SamePadding(self, images, ksizes, strides, rates):
         assert len(images.size()) == 4
         batch_size, channel, rows, cols = images.size()
         out_rows = (rows + strides[0] - 1) // strides[0]
@@ -28,30 +28,20 @@ class CiaoSR_CrossScaleAttention(nn.Module):
         return images
 
 
-    def reduce_sum(self, x, axis=None, keepdim=False):
+    def ReduceSum(self, x, axis=None, keepdim=False):
         if not axis:
             axis = range(len(x.shape))
         for i in sorted(axis, reverse=True):
             x = torch.sum(x, dim=i, keepdim=keepdim)
         return x
 
-    def extract_image_patches(self, images, ksizes, strides, rates, padding='same'):
-        """
-        Extract patches from images and put them in the C output dimension.
-        :param padding:
-        :param images: [batch, channels, in_rows, in_cols]. A 4-D Tensor with shape
-        :param ksizes: [ksize_rows, ksize_cols]. The size of the sliding window for
-        each dimension of images
-        :param strides: [stride_rows, stride_cols]
-        :param rates: [dilation_rows, dilation_cols]
-        :return: A Tensor
-        """
+    def ExtractImagePatches(self, images, ksizes, strides, rates, padding='same'):
         assert len(images.size()) == 4
         assert padding in ['same', 'valid']
         batch_size, channel, height, width = images.size()
 
         if padding == 'same':
-            images = self.same_padding(images, ksizes, strides, rates)
+            images = self.SamePadding(images, ksizes, strides, rates)
         elif padding == 'valid':
             pass
         else:
@@ -75,9 +65,9 @@ class CiaoSR_CrossScaleAttention(nn.Module):
         self.average = average
         escape_NaN = torch.FloatTensor([1e-4])
         self.register_buffer('escape_NaN', escape_NaN)
-        self.conv_match_1 = CiaoSR_BasicBlock(self.default_conv, channel, channel//reduction, 1, bn=False, act=nn.PReLU())  
-        self.conv_match_2 = CiaoSR_BasicBlock(self.default_conv, channel, channel//reduction, 1, bn=False, act=nn.PReLU())  
-        self.conv_assembly = CiaoSR_BasicBlock(self.default_conv, channel, channel, 1, bn=False, act=nn.PReLU())    
+        self.conv_match_1 = CiaoSR_BasicBlock(self.DefaultConv, channel, channel//reduction, 1, bn=False, act=nn.PReLU())  
+        self.conv_match_2 = CiaoSR_BasicBlock(self.DefaultConv, channel, channel//reduction, 1, bn=False, act=nn.PReLU())  
+        self.conv_assembly = CiaoSR_BasicBlock(self.DefaultConv, channel, channel, 1, bn=False, act=nn.PReLU())    
         #self.register_buffer('fuse_weight', fuse_weight)
 
         if 3 in scale:
@@ -113,7 +103,7 @@ class CiaoSR_CrossScaleAttention(nn.Module):
             kernel = s * self.ksize
 
             # raw_w is extracted for reconstruction
-            raw_w = self.extract_image_patches(embed_w, ksizes=[kernel, kernel],
+            raw_w = self.ExtractImagePatches(embed_w, ksizes=[kernel, kernel],
                                         strides=[self.stride * s, self.stride * s],
                                         rates=[1, 1],
                                         padding='same') # [16, 2304, 576], 2304=64*6*6, 576=48*48/(2*2), [N, C*k*k, L] 
@@ -127,7 +117,7 @@ class CiaoSR_CrossScaleAttention(nn.Module):
             # downscaling X to form Y for cross-scale matching
             ref = F.interpolate(input_pad, scale_factor=1./s, mode='bilinear')  # [16, 64, 24, 24]
             ref = self.conv_match_2(ref)        # [16, 32, 24, 24]
-            w = self.extract_image_patches(ref, ksizes=[self.ksize, self.ksize],
+            w = self.ExtractImagePatches(ref, ksizes=[self.ksize, self.ksize],
                                     strides=[self.stride, self.stride],
                                     rates=[1, 1],
                                     padding='same')   # [16, 288, 576], 288=32*3*3, 576=24*24
@@ -145,12 +135,12 @@ class CiaoSR_CrossScaleAttention(nn.Module):
             for xi, wi, raw_wi in zip(input_groups, w_groups, raw_w_groups):
                 # normalize
                 wi = wi[0]  # [576, 32, 3, 3] [L, C, k, k]
-                max_wi = torch.max(torch.sqrt(self.reduce_sum(torch.pow(wi, 2),
+                max_wi = torch.max(torch.sqrt(self.ReduceSum(torch.pow(wi, 2),
                                     axis=[1, 2, 3], keepdim=True)), self.escape_NaN) # 
                 wi_normed = wi/ max_wi # 
                 
                 # Compute correlation map
-                xi = self.same_padding(xi, [self.ksize, self.ksize], [1, 1], [1, 1])  # [1, 32, 50, 50]  xi: 1*c*H*W
+                xi = self.SamePadding(xi, [self.ksize, self.ksize], [1, 1], [1, 1])  # [1, 32, 50, 50]  xi: 1*c*H*W
                 yi = F.conv2d(xi, wi_normed, stride=1)   # [1, 576, 48, 48] [1, L, H, W] L = shape_ref[2]*shape_ref[3]
                 # yi = F.conv2d(xi.cpu(), wi_normed.cpu(), stride=1)  #TODO
 

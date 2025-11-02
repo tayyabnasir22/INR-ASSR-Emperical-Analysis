@@ -15,13 +15,13 @@ class PredictionHelpers:
     @staticmethod
     def PredictForBatch(model, inp, coord, cell, bsize):
         with torch.no_grad():
-            model.gen_feat(inp)
+            model.FeatureExtractor(inp)
             n = coord.shape[1]
             ql = 0
             preds = []
             while ql < n:
                 qr = min(ql + bsize, n)
-                pred = model.query_rgb(coord[:, ql: qr, :], cell)
+                pred = model.Query(coord[:, ql: qr, :], cell)
                 preds.append(pred)
                 ql = qr
             pred = torch.cat(preds, dim=2)
@@ -60,11 +60,11 @@ class PredictionHelpers:
             # For each metric in the list calculate the value
             psnr = Evalutaion.PSNRTrain(sr, hr)
             ssim = Evalutaion.SSIMTrain(sr, hr)
-            psnr_res.add(psnr.item(), inp.shape[0])
-            ssim_res.add(ssim.item(), inp.shape[0])
+            psnr_res.SetItem(psnr.item(), inp.shape[0])
+            ssim_res.SetItem(ssim.item(), inp.shape[0])
 
         return {
-            'psnr': psnr_res.item(), 'ssim': ssim_res.item()
+            'psnr': psnr_res.GetItem(), 'ssim': ssim_res.GetItem()
         }
     
     @staticmethod
@@ -107,7 +107,7 @@ class PredictionHelpers:
             results = Evalutaion.GetEvaluationScores(sr, hr, lpips_model)
 
             for attr_name, value in vars(results).items():
-                val_res[attr_name].add(value, 1)
+                val_res[attr_name].SetItem(value, 1)
 
             results = None
 

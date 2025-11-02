@@ -13,12 +13,12 @@ class MetaSR(DecoderBase):
         self.imnet = LIIF_MLP(3, self.encoder.out_dim * 9 * 3, [hidden_dim])
         
 
-    def gen_feat(self, inp):
+    def FeatureExtractor(self, inp):
         self.inp = inp
         self.feat = self.encoder(inp)
         return self.feat
 
-    def query_rgb(self, coord, cell):
+    def Query(self, coord, cell):
         feat = self.feat
 
         feat = F.unfold(feat, 3, padding=1).view(
@@ -68,5 +68,5 @@ class MetaSR(DecoderBase):
     
 
     def forward(self, inp, coord, cell):
-        self.gen_feat(inp)
-        return self.query_rgb(coord, cell)
+        self.FeatureExtractor(inp)
+        return self.Query(coord, cell)

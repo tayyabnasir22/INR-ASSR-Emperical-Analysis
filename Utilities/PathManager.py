@@ -18,6 +18,6 @@ class PathManager:
     @staticmethod
     def SetModelSavePath(save_path, remove=True):
         PathManager.CheckPathExists(save_path, remove=remove)
-        Logger.set_log_path(save_path)
+        Logger.SetLogPath(save_path)
         writer = SummaryWriter(os.path.join(save_path, 'tensorboard'))
         return Logger.Log, writer

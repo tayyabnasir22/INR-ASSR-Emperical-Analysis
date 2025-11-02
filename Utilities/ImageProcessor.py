@@ -220,7 +220,6 @@ class ImageProcessor:
     
     @staticmethod
     def FirstOrderDerivativeSobel(img):
-        """Compute Sobel gradients for an image tensor (N,C,H,W)."""
         C = img.shape[1]
         sobel_x = torch.tensor([[-1,0,1],
                                 [-2,0,2],

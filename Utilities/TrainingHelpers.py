@@ -49,7 +49,7 @@ class TrainingHelpers:
             step += 1
 
             # 4.5. Accumulate the loss for the step
-            runningAvg.add(loss.item())
+            runningAvg.SetItem(loss.item())
             
             # 4.6. Back propogate
             optimizer.zero_grad()
@@ -61,7 +61,7 @@ class TrainingHelpers:
             evals = None
 
         # 5. Return the accumulated loss
-        return runningAvg.item()
+        return runningAvg.GetItem()
 
     @staticmethod
     def Validation(model, pipeline: BaseTrainingPipeline, log_info: list, epoch: int, max_validation_metric: float):

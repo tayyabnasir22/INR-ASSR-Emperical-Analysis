@@ -28,12 +28,12 @@ class LTE(DecoderBase):
         layers.append(nn.Conv2d(hidden_dim, out_dim, 1))
         self.layers = nn.Sequential(*layers)
 
-    def gen_feat(self, inp):
+    def FeatureExtractor(self, inp):
         self.inp = inp
         self.feat = self.encoder(inp)
         return self.feat
 
-    def query_rgb(self, coord, cell):
+    def Query(self, coord, cell):
         feat = self.feat
         coef = self.coef(feat) # coefficient
         freq = self.freq(feat) # frequency
@@ -104,5 +104,5 @@ class LTE(DecoderBase):
                                 padding_mode='border', align_corners=False)
 
     def forward(self, inp, coord, cell):
-        self.gen_feat(inp)
-        return self.query_rgb(coord, cell)
+        self.FeatureExtractor(inp)
+        return self.Query(coord, cell)

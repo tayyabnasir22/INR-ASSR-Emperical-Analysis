@@ -19,12 +19,12 @@ class SRNO(DecoderBase):
         self.fc1 = nn.Conv2d(hidden_dim, hidden_dim, 1)
         self.fc2 = nn.Conv2d(hidden_dim, 3, 1)
 
-    def gen_feat(self, inp):
+    def FeatureExtractor(self, inp):
         self.inp = inp
         self.feat = self.encoder(inp)
         return self.feat
 
-    def query_rgb(self, coord, cell):
+    def Query(self, coord, cell):
         feat = (self.feat)
         grid = 0
 
@@ -89,5 +89,5 @@ class SRNO(DecoderBase):
         return ret
 
     def forward(self, inp, coord, cell):
-        self.gen_feat(inp)
-        return self.query_rgb(coord, cell)
+        self.FeatureExtractor(inp)
+        return self.Query(coord, cell)

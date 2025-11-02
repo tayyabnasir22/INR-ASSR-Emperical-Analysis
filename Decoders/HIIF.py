@@ -25,13 +25,13 @@ class HIIF(DecoderBase):
         self.conv0 = HIIF_Attention(hidden_dim, blocks)
         self.conv1 = HIIF_Attention(hidden_dim, blocks)
 
-    def gen_feat(self, inp):
+    def FeatureExtractor(self, inp):
         self.inp = inp
         self.feat = self.encoder(inp)
         self.feat = self.freq(self.feat)
         return self.feat
 
-    def query_rgb(self, coord, cell):
+    def Query(self, coord, cell):
         feat = (self.feat)
         grid = 0
 
@@ -110,5 +110,5 @@ class HIIF(DecoderBase):
         return ret
 
     def forward(self, inp, coord, cell):
-        self.gen_feat(inp)
-        return self.query_rgb(coord, cell)
+        self.FeatureExtractor(inp)
+        return self.Query(coord, cell)

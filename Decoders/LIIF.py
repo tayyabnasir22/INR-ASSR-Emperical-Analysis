@@ -25,12 +25,12 @@ class LIIF(DecoderBase):
         total_params = sum(p.numel() for p in self.encoder.parameters())
         print(f"Total parameters: {total_params:,}")
 
-    def gen_feat(self, inp):
+    def FeatureExtractor(self, inp):
         self.inp = inp
         self.feat = self.encoder(inp)
         return self.feat
     
-    def query_rgb(self, coord, cell):
+    def Query(self, coord, cell):
         B, H, W, _ = coord.shape
 
         feat = self.feat
@@ -99,5 +99,5 @@ class LIIF(DecoderBase):
 
 
     def forward(self, inp, coord, cell):
-        self.gen_feat(inp)
-        return self.query_rgb(coord, cell)
+        self.FeatureExtractor(inp)
+        return self.Query(coord, cell)

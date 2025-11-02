@@ -43,12 +43,12 @@ class CiaoSR(DecoderBase):
         self.cs_attn = CiaoSR_CrossScaleAttention(channel=imnet_dim, scale=multi_scale)
 
 
-    def gen_feat(self, inp):
+    def FeatureExtractor(self, inp):
         self.inp = inp
         self.feat = self.encoder(inp)
         return self.feat
     
-    def query_rgb(self, coord, cell):
+    def Query(self, coord, cell):
         
         feat = self.feat
         
@@ -151,5 +151,5 @@ class CiaoSR(DecoderBase):
         return ret
 
     def forward(self, inp, coord, cell):
-        self.gen_feat(inp)
-        return self.query_rgb(coord, cell)
+        self.FeatureExtractor(inp)
+        return self.Query(coord, cell)
