@@ -17,24 +17,46 @@ class ModelAttributesManager:
             return tot
 
     @staticmethod
-    def CreateAdamOptimizer(param_list, state: dict, lr: float = 4.e-4, load_sd=False):
+    def CreateAdamOptimizer(
+        param_list, 
+        state: dict, 
+        lr: float = 4.e-4, 
+        load_sd=False
+    ):
         optimizer = Adam(param_list, lr=lr)
         if load_sd:
             optimizer.load_state_dict(state)
         return optimizer
     
     @staticmethod
-    def CreateMultiStepLRScheduler(optimizer, milestones: list[int], gamma: float, last_epoch: int = -1):
+    def CreateMultiStepLRScheduler(
+        optimizer, 
+        milestones: list[int], 
+        gamma: float, 
+        last_epoch: int = -1
+    ):
         return MultiStepLR(optimizer, milestones, gamma, last_epoch)
     
     @staticmethod
-    def CreateSGDRScheduler(optimizer, t_zero: int = 50, t_mult: int = 1, lr_min: float = 2.e-6, last_epoch: int = -1):
+    def CreateSGDRScheduler(
+        optimizer, 
+        t_zero: int = 50, 
+        t_mult: int = 1, 
+        lr_min: float = 2.e-6, 
+        last_epoch: int = -1
+    ):
         # TODO see how this can be managed
         optimizer.lr = 2.e-6
         return CosineAnnealingWarmRestarts(optimizer, t_zero, t_mult, lr_min, last_epoch)
     
     @staticmethod
-    def SaveModel(model, optimizer, epoch: int, save_path: str, save_name):
+    def SaveModel(
+        model, 
+        optimizer, 
+        epoch: int, 
+        save_path: str, 
+        save_name
+    ):
         sv_file = {
             'model': model.state_dict(),
             'optimizer': optimizer.state_dict(),

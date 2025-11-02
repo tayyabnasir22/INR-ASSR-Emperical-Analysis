@@ -1,4 +1,4 @@
-from Configurations.BenchmarkType import BenchmarkType
+from Models.BenchmarkType import BenchmarkType
 from Utilities.CoordinateManager import CoordinateManager
 import torch
 from torchvision import transforms
@@ -78,7 +78,14 @@ class ImageProcessor:
                 transforms.ToPILImage()(img)))
 
     @staticmethod
-    def SampleForModel(img, scale_min=1, scale_max=4, inp_size=None, augment=False, epoch=None):
+    def SampleForModel(
+        img, 
+        scale_min=1, 
+        scale_max=4, 
+        inp_size=None, 
+        augment=False, 
+        epoch=None
+    ):
         if epoch < 20: s = random.randint(scale_min, scale_max)
         s = random.uniform(scale_min, scale_max)
         # print(s)
@@ -89,7 +96,14 @@ class ImageProcessor:
             h_hr = round(h_lr * s)
             w_hr = round(w_lr * s)
             img = img[:, :, :h_hr, :w_hr]
-            img_down = torch.stack([ImageProcessor.Resize(x, (h_lr, w_lr)) for x in img], dim=0)
+            img_down = torch.stack(
+                [
+                    ImageProcessor.Resize(
+                        x, 
+                        (h_lr, w_lr)
+                    ) for x in img], 
+                dim=0
+            )
             crop_lr, crop_hr = img_down, img
         else:
             h_lr = inp_size
@@ -99,7 +113,12 @@ class ImageProcessor:
             x0 = random.randint(0, img.shape[-2] - w_hr)
             y0 = random.randint(0, img.shape[-1] - w_hr)
             crop_hr = img[:, :, x0: x0 + w_hr, y0: y0 + w_hr]
-            crop_lr = torch.stack([ImageProcessor.Resize(x, w_lr) for x in crop_hr], dim=0)
+            crop_lr = torch.stack(
+                [
+                    ImageProcessor.Resize(x, w_lr) for x in crop_hr
+                ], 
+                dim=0
+            )
 
         if augment == True:
             hflip = random.random() < 0.5
@@ -118,8 +137,15 @@ class ImageProcessor:
         coord = CoordinateManager.CreateCoordinates([h_hr, w_hr], flatten=False)
         coord = coord.unsqueeze(0).expand(img.shape[0], *coord.shape[:2], 2)
 
-        cell = torch.tensor([2 / crop_hr.shape[-2], 2 / crop_hr.shape[-1]], dtype=torch.float32).unsqueeze(0).expand(
-            img.shape[0], 2)
+        cell = torch.tensor(
+            [
+                2 / crop_hr.shape[-2], 2 / crop_hr.shape[-1]
+            ], 
+            dtype=torch.float32
+        ).unsqueeze(0).expand(
+            img.shape[0], 2
+        )
+
         return {
             'inp': crop_lr.contiguous(),
             'coord': coord.contiguous(),
@@ -130,7 +156,14 @@ class ImageProcessor:
     @staticmethod
     def MergePatches(patches, H, W, patch_size=100):
         B, C = patches[0].shape[:2]
-        merged = torch.zeros(B, C, H, W, device=patches[0].device, dtype=patches[0].dtype)
+        merged = torch.zeros(
+            B, 
+            C, 
+            H, 
+            W, 
+            device=patches[0].device, 
+            dtype=patches[0].dtype
+        )
 
         idx = 0
         for i in range(0, H, patch_size):
@@ -145,7 +178,14 @@ class ImageProcessor:
     @staticmethod
     def MergePatchesOverlap(patches, H, W, patch_size=100, overlap=20):
         B, C = patches[0].shape[:2]
-        merged = torch.zeros(B, C, H, W, device=patches[0].device, dtype=patches[0].dtype)
+        merged = torch.zeros(
+            B, 
+            C, 
+            H, 
+            W, 
+            device=patches[0].device, 
+            dtype=patches[0].dtype
+        )
         weight = torch.zeros_like(merged)  # for blending overlaps
 
         stride = patch_size - overlap
@@ -169,7 +209,13 @@ class ImageProcessor:
         return merged.contiguous()
 
     @staticmethod
-    def GetPatchesOverlap(lr_img, hr_coord, scale, patch_size=100, overlap=20):
+    def GetPatchesOverlap(
+        lr_img, 
+        hr_coord, 
+        scale, 
+        patch_size=100, 
+        overlap=20
+    ):
         lr_patches = []
         hr_coord_patches = []
         B, C, H_lr, W_lr = lr_img.shape

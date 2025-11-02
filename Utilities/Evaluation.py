@@ -16,9 +16,27 @@ class Evalutaion:
     def SSIMTrain(sr, hr, rgb_range=1):
         diff_sr = sr / rgb_range
         diff_hr = hr / rgb_range
-        return ssim(diff_sr, diff_hr, data_range=1.0, size_average=True)
+        return ssim(
+            diff_sr, 
+            diff_hr, 
+            data_range=1.0, 
+            size_average=True
+        )
 
     @staticmethod
-    def GetEvaluationScores(sr, hr, lpips_model, dataset=None, scale=1, rgb_range=1):
-        sr, hr = ImageProcessor.PreprocessingForScoring(sr, hr, dataset, scale, rgb_range)
+    def GetEvaluationScores(
+        sr, 
+        hr, 
+        lpips_model, 
+        dataset=None, 
+        scale=1, 
+        rgb_range=1
+    ):
+        sr, hr = ImageProcessor.PreprocessingForScoring(
+            sr, 
+            hr, 
+            dataset, 
+            scale, 
+            rgb_range
+        )
         return ScoreEvaluations(sr, hr, lpips_model)

@@ -1,12 +1,7 @@
-from Configurations.BenchmarkType import BenchmarkType
-from Configurations.NormalizerRange import NormalizerRange
+from Models.BenchmarkType import BenchmarkType
+from Models.NormalizerRange import NormalizerRange
 from Models.RunningAverage import RunningAverage
-from Models.ScoreEvaluations import ScoreEvaluations
-from Utilities.CoordinateManager import CoordinateManager
 from Utilities.Evaluation import Evalutaion
-import random
-import math
-from functools import partial
 from tqdm import tqdm
 from Utilities.ImageProcessor import ImageProcessor
 import torch
@@ -28,7 +23,14 @@ class PredictionHelpers:
         return pred
     
     @staticmethod
-    def EvaluateForTrainigData(data_loader, model, input_nomrlizer_range: NormalizerRange, eval_bsize: int, scale: int = 4, dataset = BenchmarkType.DIV2K):
+    def EvaluateForTrainigData(
+        data_loader, 
+        model, 
+        input_nomrlizer_range: NormalizerRange, 
+        eval_bsize: int, 
+        scale: int = 4, 
+        dataset = BenchmarkType.DIV2K
+    ):
         model.eval()
 
         inp_sub = torch.FloatTensor(input_nomrlizer_range.sub).view(1, -1, 1, 1).cuda()
@@ -49,7 +51,13 @@ class PredictionHelpers:
             coord = batch['coord']
             cell = batch['cell']
 
-            pred = PredictionHelpers.PredictForBatch(model, inp, coord, cell * max(scale, 1), eval_bsize)
+            pred = PredictionHelpers.PredictForBatch(
+                model, 
+                inp, 
+                coord, 
+                cell * max(scale, 1), 
+                eval_bsize
+            )
                 
             pred = pred * gt_div + gt_sub
             pred.clamp_(0, 1)
@@ -68,7 +76,15 @@ class PredictionHelpers:
         }
     
     @staticmethod
-    def EvaluteForTesting(data_loader, model, lpips_model, input_nomrlizer_range: NormalizerRange, eval_bsize: int, scale: int = 4, dataset = BenchmarkType.DIV2K):
+    def EvaluteForTesting(
+        data_loader, 
+        model, 
+        lpips_model, 
+        input_nomrlizer_range: NormalizerRange, 
+        eval_bsize: int, 
+        scale: int = 4, 
+        dataset = BenchmarkType.DIV2K
+    ):
         model.eval()
 
         inp_sub = torch.FloatTensor(input_nomrlizer_range.sub).view(1, -1, 1, 1).cuda()
@@ -96,13 +112,24 @@ class PredictionHelpers:
             coord = batch['coord']
             cell = batch['cell']
 
-            pred = PredictionHelpers.PredictForBatch(model, inp, coord, cell * max(scale, 1), eval_bsize)
+            pred = PredictionHelpers.PredictForBatch(
+                model, 
+                inp, 
+                coord, 
+                cell * max(scale, 1), 
+                eval_bsize
+            )
                 
             pred = pred * gt_div + gt_sub
             pred.clamp_(0, 1)
 
             # Process the images for evaluation, shaving the required pixels
-            sr, hr = ImageProcessor.PreprocessingForScoring(pred, batch['gt'], dataset, scale=scale)
+            sr, hr = ImageProcessor.PreprocessingForScoring(
+                pred, 
+                batch['gt'], 
+                dataset, 
+                scale=scale
+            )
 
             results = Evalutaion.GetEvaluationScores(sr, hr, lpips_model)
 

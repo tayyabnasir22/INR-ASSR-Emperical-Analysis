@@ -12,7 +12,13 @@ class CoordinateManager:
             r = (v1 - v0) / (2 * n)
             seq = v0 + r + (2 * r) * torch.arange(n).float()
             coord_seqs.append(seq)
-        ret = torch.stack(torch.meshgrid(*coord_seqs, indexing="ij"), dim=-1)
+        ret = torch.stack(
+            torch.meshgrid(
+                *coord_seqs, 
+                indexing="ij"
+            ), 
+            dim=-1
+        )
         if flatten:
             ret = ret.view(-1, ret.shape[-1])
         return ret
