@@ -8,8 +8,14 @@ import numpy as np
 from PIL import Image
 
 class SRImplicitDownsampled(SRDataProcessorBase):
-    def __init__(self, dataset, inp_size=None, scale_min=1, scale_max=None,
-                 augment=False):
+    def __init__(
+            self, 
+            dataset, 
+            inp_size=None, 
+            scale_min=1, 
+            scale_max=None,
+            augment=False
+        ):
         self.dataset = dataset
         self.inp_size = inp_size
         self.scale_min = scale_min

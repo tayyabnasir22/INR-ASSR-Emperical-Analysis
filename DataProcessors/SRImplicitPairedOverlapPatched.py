@@ -3,7 +3,14 @@ from Utilities.CoordinateManager import CoordinateManager
 import torch
 
 class SRImplicitPairedOverlapPatched(SRDataProcessorBase):
-    def __init__(self, dataset, inp_size=None, patch_size=100, overlap=20, augment=False):
+    def __init__(
+            self, 
+            dataset, 
+            inp_size=None, 
+            patch_size=100, 
+            overlap=20, 
+            augment=False
+        ):
         self.dataset = dataset
         self.inp_size = inp_size
         self.patch_size = patch_size
@@ -44,11 +51,22 @@ class SRImplicitPairedOverlapPatched(SRDataProcessorBase):
                 # HR patch (coords + rgb)
                 hr_rgb_patch = crop_hr[:, int(hi):int(h_end_hr), int(hj):int(w_end_hr)]
 
-                hr_coord_patch = CoordinateManager.CreateCoordinates([hr_rgb_patch.shape[-2], hr_rgb_patch.shape[-1]], flatten=False)
+                hr_coord_patch = CoordinateManager.CreateCoordinates(
+                    [
+                        hr_rgb_patch.shape[-2], 
+                        hr_rgb_patch.shape[-1]
+                    ], 
+                    flatten=False
+                )
 
                 # Cell per patch (normalized size)
-                cell = torch.tensor([2 / hr_rgb_patch.shape[-2], 
-                                     2 / hr_rgb_patch.shape[-1]], dtype=torch.float32)
+                cell = torch.tensor(
+                    [
+                        2 / hr_rgb_patch.shape[-2],
+                        2 / hr_rgb_patch.shape[-1]
+                    ], 
+                    dtype=torch.float32
+                )
 
                 lr_patches.append(lr_patch.contiguous())
                 hr_coord_patches.append(hr_coord_patch.contiguous())

@@ -4,7 +4,12 @@ import random
 import torch
 
 class SRImplicitPaired(SRDataProcessorBase):
-    def __init__(self, dataset, inp_size=None, augment=False):
+    def __init__(
+            self, 
+            dataset, 
+            inp_size=None, 
+            augment=False
+        ):
         self.dataset = dataset
         self.inp_size = inp_size
         self.augment = augment
@@ -59,7 +64,13 @@ class SRImplicitPaired(SRDataProcessorBase):
             hr_coord = hr_coord[x0:x0+self.inp_size, y0:y0+self.inp_size, :]
             hr_rgb = crop_hr[:, x0:x0+self.inp_size, y0:y0+self.inp_size]
         
-        cell = torch.tensor([2 / crop_hr.shape[-2], 2 / crop_hr.shape[-1]], dtype=torch.float32)
+        cell = torch.tensor(
+            [
+                2 / crop_hr.shape[-2], 
+                2 / crop_hr.shape[-1]
+            ], 
+            dtype=torch.float32
+        )
 
         return {
             'inp': crop_lr,

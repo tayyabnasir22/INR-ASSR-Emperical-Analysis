@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-
-from Configurations.BenchmarkType import BenchmarkType
+from Models.BenchmarkType import BenchmarkType
 from Configurations.TrainingDataConfigurations import TrainingDataConfigurations
 
 @dataclass

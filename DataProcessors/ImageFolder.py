@@ -1,5 +1,4 @@
 import os
-import json
 from PIL import Image
 from DataProcessors.FolderReaderBase import FolderReaderBase
 from torchvision import transforms

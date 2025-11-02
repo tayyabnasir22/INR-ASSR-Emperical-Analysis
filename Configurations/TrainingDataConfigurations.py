@@ -1,7 +1,5 @@
 from dataclasses import dataclass
-from Configurations.NormalizerRange import NormalizerRange
-from DataProcessors.FolderReaderBase import FolderReaderBase
-from DataProcessors.SRDataProcessorBase import SRDataProcessorBase
+from Models.NormalizerRange import NormalizerRange
 
 @dataclass
 class TrainingDataConfigurations:
