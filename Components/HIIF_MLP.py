@@ -1,7 +1,14 @@
 import torch.nn as nn
 
 class HIIF_MLP(nn.Module):
-    def __init__(self, in_dim, out_dim, hidden_dim, act_layer=nn.GELU, drop=0.):
+    def __init__(
+            self, 
+            in_dim, 
+            out_dim, 
+            hidden_dim, 
+            act_layer=nn.GELU, 
+            drop=0.0
+        ):
         super().__init__()
         self.norm = nn.LayerNorm(in_dim)
         self.fc1 = nn.Linear(in_dim, hidden_dim)

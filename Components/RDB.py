@@ -2,11 +2,16 @@ from Components.RDB_Conv import RDB_Conv
 import torch.nn as nn
 
 class RDB(nn.Module):
-    def __init__(self, growRate0, growRate, nConvLayers, kSize=3):
+    def __init__(
+            self, 
+            grow_rate_0, 
+            grow_rate, 
+            n_conv_layers,
+        ):
         super(RDB, self).__init__()
-        G0 = growRate0
-        G  = growRate
-        C  = nConvLayers
+        G0 = grow_rate_0
+        G  = grow_rate
+        C  = n_conv_layers
 
         convs = []
         for c in range(C):

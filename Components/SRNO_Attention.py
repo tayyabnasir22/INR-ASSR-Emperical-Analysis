@@ -23,7 +23,12 @@ class SRNO_Attention(nn.Module):
         B, C, H, W = x.shape
         bias = x
 
-        qkv = self.qkv_proj(x).permute(0, 2, 3, 1).reshape(B, H*W, self.heads, 3*self.headc)
+        qkv = self.qkv_proj(x).permute(0, 2, 3, 1).reshape(
+            B, 
+            H*W, 
+            self.heads, 
+            3*self.headc
+        )
         qkv = qkv.permute(0, 2, 1, 3)
         q, k, v = qkv.chunk(3, dim=-1)
 

@@ -2,7 +2,15 @@ import math
 import torch.nn as nn
 
 class EDSRUpsampler(nn.Sequential):
-    def __init__(self, conv, scale, n_feats, bn=False, act=False, bias=True):
+    def __init__(
+            self, 
+            conv, 
+            scale, 
+            n_feats, 
+            bn=False, 
+            act=False, 
+            bias=True
+        ):
 
         m = []
         if (scale & (scale - 1)) == 0:    # Is scale = 2^n?
