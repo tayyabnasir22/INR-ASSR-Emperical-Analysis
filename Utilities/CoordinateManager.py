@@ -3,8 +3,6 @@ import torch
 class CoordinateManager:
     @staticmethod
     def CreateCoordinates(shape, ranges=None, flatten=True):
-        """ Make coordinates at grid centers.
-        """
         coord_seqs = []
         for i, n in enumerate(shape):
             if ranges is None:
