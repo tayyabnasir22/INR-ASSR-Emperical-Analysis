@@ -7,6 +7,7 @@ from DataProcessors.SRImplicitDownsampled import SRImplicitDownsampled
 from Pipelines.PipelineBase import PipelineBase
 import torch.nn as nn
 import torch
+from Utilities.DataLoaders import DataLoaders
 
 class BaseTestingPipeline(PipelineBase):
     def __init__(self):
@@ -42,14 +43,17 @@ class BaseTestingPipeline(PipelineBase):
         )
 
     def CreateDataLoaders(self,):
-        self.validation_data_loader = SRImplicitDownsampled(
-            dataset=ImageFolder(
-                self.configurations.data_configurations.base_folder, 
+        self.validation_data_loader = DataLoaders.GetTestingDataLoader(
+            SRImplicitDownsampled(
+                dataset=ImageFolder(
+                    self.configurations.data_configurations.base_folder, 
+                ),
+                inp_size=None,
+                scale_min=self.configurations.data_configurations.eval_scale,
+                scale_max=self.configurations.data_configurations.eval_scale,
+                augment=self.configurations.data_configurations.augment,
             ),
-            inp_size=None,
-            scale_min=self.configurations.data_configurations.eval_scale,
-            scale_max=self.configurations.data_configurations.eval_scale,
-            augment=self.configurations.data_configurations.augment,
+            self.configurations.data_configurations.batch_size
         )
 
     def LoadModelWeights(self, ):

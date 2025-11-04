@@ -7,6 +7,7 @@ from DataProcessors.SRImplicitPaired import SRImplicitPaired
 from Pipelines.PipelineBase import PipelineBase
 import torch.nn as nn
 import torch
+from Utilities.DataLoaders import DataLoaders
 
 class BaseTestingPairedPipeline(PipelineBase):
     def __init__(self):
@@ -42,12 +43,15 @@ class BaseTestingPairedPipeline(PipelineBase):
         )
 
     def CreateDataLoaders(self,):
-        self.validation_data_loader = SRImplicitPaired(
-            dataset=PairedImageFolders(
-                self.configurations.data_configurations.base_folder, 
-                self.configurations.data_configurations.base_folder2,
+        self.validation_data_loader = DataLoaders.GetTestingDataLoader(
+            SRImplicitPaired(
+                dataset=PairedImageFolders(
+                    self.configurations.data_configurations.base_folder, 
+                    self.configurations.data_configurations.base_folder2,
+                ),
+                inp_size=None,
             ),
-            inp_size=None,
+            self.configurations.data_configurations.batch_size
         )
 
     def LoadModelWeights(self, ):

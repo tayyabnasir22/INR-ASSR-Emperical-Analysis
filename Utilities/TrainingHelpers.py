@@ -131,7 +131,7 @@ class TrainingHelpers:
                 pipeline.loss, 
                 pipeline.metrics, 
                 epoch, 
-                pipeline.configurations, 
+                pipeline.configurations.data_configurations, 
                 writer
             )
 
