@@ -11,7 +11,6 @@ import os
 
 class EDSR_LIIF_SimplePairedValidator(BaseValidator):
 
-
     def TestModel(self,):
         # 1. Init thre required Pipeline
         pipeline = BaseTestingPairedPipeline()
@@ -45,3 +44,5 @@ class EDSR_LIIF_SimplePairedValidator(BaseValidator):
             pipeline.configurations.model_path, 
             TestingStrategy.Simple
         )
+
+        Logger.Log('Test results saved at: ', out_path)
