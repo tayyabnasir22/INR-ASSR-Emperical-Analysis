@@ -24,6 +24,11 @@ class BaseTrainingPipeline(PipelineBase):
         self._patch_size_train = 48
         self._patch_size_valid = 48
 
+        # -1 to when starting fresh for the optimizers and schedulars to work to indicate 0->1 epoch
+        # Last successfully completed epoch for example 50 if the 50th epoch was completed to mark 50->51 epoch
+        # Make sure to add + 1 before training to save epoch completed number properly
+        self.start_epoch = -1
+
     def InitModel(self, model: nn.Module):
         self.model = model
 
@@ -93,7 +98,7 @@ class BaseTrainingPipeline(PipelineBase):
 
     def InitTrainingRecipe(self, ):
         # 1. Set the start epoch
-        self.start_epoch = 1 if self.saved_model is None else self.saved_model['epoch'] + 1
+        self.start_epoch = self.start_epoch if self.saved_model is None else self.saved_model['epoch']
 
         # 2. Create/Load the optimizer
         if self.saved_model is not None:
