@@ -115,6 +115,9 @@ class TrainingHelpers:
         timer = Timer()
         max_validation_metric = -1e18
 
+        # Set that start to 1 if fresh start, else add +1 if resuming
+        pipeline.start_epoch = 1 if pipeline.start_epoch == -1 else pipeline.start_epoch + 1
+
         # 3. Train the model for the required epochs
         for epoch in range(pipeline.start_epoch, pipeline.configurations.epochs + 1):
             # 3.1. Start logging the epoch
