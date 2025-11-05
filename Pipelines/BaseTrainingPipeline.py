@@ -7,16 +7,19 @@ from Configurations.ValidationDataConfigurations import ValidationDataConfigurat
 from DataProcessors.ImageFolder import ImageFolder
 from DataProcessors.SRImplicitDownsampled import SRImplicitDownsampled
 from Pipelines.PipelineBase import PipelineBase
+from Utilities.DataLoaders import DataLoaders
 from Utilities.Evaluation import Evalutaion
 from Utilities.ModelAttributesManager import ModelAttributesManager
 from torch.optim.optimizer import Optimizer
 import torch.nn as nn
 import torch
 
+from Utilities.PathManager import PathManager
+
 class BaseTrainingPipeline(PipelineBase):
     def __init__(self):
-        self._trian_data_path = './datasets/DIV2K_trin_HR'
-        self._valid_data_path = './datasets/DIV2K_valid_HR'
+        self._trian_data_path = './datasets/DIV2K_train_HR'
+        self._valid_data_path = './datasets/DIV2K/DIV2K_valid_HR'
         self._model_save_path = './model_states'
         self._model_load_path = './model_states/last.pth'
         self._batch_Size = 32
@@ -59,35 +62,41 @@ class BaseTrainingPipeline(PipelineBase):
                 eval_scale=4,
                 base_folder2='',
             ),
-            lr_scheduler={'milestones': [200, 400, 600, 800], 'gamma': 0.5},
+            lr_scheduler={'milestones': [2, 4, 6, 8], 'gamma': 0.5},
             epochs=1000,
             save_path=self._model_save_path,
             resume_path=self._model_load_path,
-            epoch_val=10,
-            epoch_save=10,
+            epoch_val=1,
+            epoch_save=1,
             monitor_metric='psnr',
         )
 
     def CreateDataLoaders(self,):
-        self.training_data_loader = SRImplicitDownsampled(
-            dataset=ImageFolder(
-                self.configurations.data_configurations.base_folder, 
-                self.configurations.data_configurations.repeat
+        self.training_data_loader = DataLoaders.GetTrainingDataLoader(
+            SRImplicitDownsampled(
+                dataset=ImageFolder(
+                    self.configurations.data_configurations.base_folder, 
+                    self.configurations.data_configurations.repeat
+                ),
+                inp_size=self.configurations.data_configurations.patch_size,
+                scale_min=self.configurations.data_configurations.scale_range[0],
+                scale_max=self.configurations.data_configurations.scale_range[1],
+                augment=self.configurations.data_configurations.augment
             ),
-            inp_size=self.configurations.data_configurations.patch_size,
-            scale_min=self.configurations.data_configurations.scale_range[0],
-            scale_max=self.configurations.data_configurations.scale_range[1],
-            augment=self.configurations.data_configurations.augment
+            self.configurations.data_configurations.batch_size,
         )
-        self.validation_data_loader = SRImplicitDownsampled(
-            dataset=ImageFolder(
-                self.configurations.validation_data_configurations.base_folder, 
-                self.configurations.validation_data_configurations.repeat
+        self.validation_data_loader = DataLoaders.GetValidationDataLoader(
+            SRImplicitDownsampled(
+                dataset=ImageFolder(
+                    self.configurations.validation_data_configurations.base_folder, 
+                    self.configurations.validation_data_configurations.repeat
+                ),
+                inp_size=self.configurations.validation_data_configurations.patch_size,
+                scale_min=self.configurations.validation_data_configurations.scale_range[0],
+                scale_max=self.configurations.validation_data_configurations.scale_range[1],
+                augment=self.configurations.validation_data_configurations.augment
             ),
-            inp_size=self.configurations.validation_data_configurations.patch_size,
-            scale_min=self.configurations.validation_data_configurations.scale_range[0],
-            scale_max=self.configurations.validation_data_configurations.scale_range[1],
-            augment=self.configurations.validation_data_configurations.augment
+            self.configurations.validation_data_configurations.batch_size
         )
 
     def LoadModelWeights(self, ):

@@ -88,7 +88,6 @@ class ImageProcessor:
     ):
         if epoch < 20: s = random.randint(scale_min, scale_max)
         s = random.uniform(scale_min, scale_max)
-        # print(s)
 
         if inp_size is None:
             h_lr = math.floor(img.shape[-2] / s + 1e-9)
