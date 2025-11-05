@@ -13,7 +13,7 @@ import os
 
 class BaseTestingPipeline(PipelineBase):
     def __init__(self):
-        self._valid_data_path = './datasets/DIV2K_valid_HR'
+        self._valid_data_path = './datasets/DIV2K/DIV2K_valid_HR'
         self._valid_data_pathScale = ''
         self._model_load_path = './model_states'
         self._model_name = 'last.pth'
