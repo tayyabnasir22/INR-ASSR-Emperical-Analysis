@@ -8,12 +8,15 @@ from Pipelines.PipelineBase import PipelineBase
 import torch.nn as nn
 import torch
 from Utilities.DataLoaders import DataLoaders
+from Utilities.PathManager import PathManager
+import os
 
 class BaseTestingPipeline(PipelineBase):
     def __init__(self):
         self._valid_data_path = './datasets/DIV2K_valid_HR'
         self._valid_data_pathScale = ''
         self._model_load_path = './model_states/last.pth'
+        self._model_name = 'last.pth'
         self._total_example = 100
         self._eval_scale = 4
         self._eval_batch_Size = 300
@@ -22,6 +25,9 @@ class BaseTestingPipeline(PipelineBase):
 
     def InitModel(self, model: nn.Module):
         self.model = model
+
+    def SetSavePaths(self, ):
+        PathManager.SetModelSavePath(self._model_load_path, False)
 
     def LoadConfigurations(self,):
         self.configurations = ValidationConfigurations(
@@ -57,7 +63,7 @@ class BaseTestingPipeline(PipelineBase):
         )
 
     def LoadModelWeights(self, ):
-        self.saved_model = torch.load(self.configurations.model_path)
+        self.saved_model = torch.load(os.path.join(self.configurations.model_path, self._model_name))
         self.model.load_state_dict(self.saved_model['model'])
         self.model = torch.compile(self.model)
 

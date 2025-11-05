@@ -6,8 +6,8 @@ from Pipelines.PipelineBase import PipelineBase
 class EDSR_LIIF_Factory(BaseModelFactory):
     def BuildModel(self, pipeline: PipelineBase) -> PipelineBase:
         # Create the ecnoder and decoder
-        encoder = EDSR()
-        model = LIIF(encoder)
+        encoder = EDSR().cuda()
+        model = LIIF(encoder).cuda()
 
         # Call the Pipeline chains
         pipeline.LoadConfigurations()
