@@ -7,10 +7,6 @@ class PipelineBase(ABC):
         self.model = model
 
     @abstractmethod
-    def SetSavePaths(self, ):
-        pass
-
-    @abstractmethod
     def LoadConfigurations(self,):
         pass
 

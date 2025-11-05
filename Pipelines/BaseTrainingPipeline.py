@@ -35,9 +35,6 @@ class BaseTrainingPipeline(PipelineBase):
     def InitModel(self, model: nn.Module):
         self.model = model
 
-    def SetSavePaths(self, ):
-        PathManager.SetModelSavePath(self._model_save_path, False)
-
     def LoadConfigurations(self,):
         self.configurations = TrainingConfigurations(
             optimizer={'learning_rate': 4.e-4},
