@@ -20,11 +20,6 @@ class LIIF(DecoderBase):
 
         self.imnet = LIIF_MLP(imnet_in_dim, out_dim, hidden_list)
 
-        total_params = sum(p.numel() for p in self.imnet.parameters())
-        print(f"Total parameters: {total_params:,}")
-        total_params = sum(p.numel() for p in self.encoder.parameters())
-        print(f"Total parameters: {total_params:,}")
-
     def FeatureExtractor(self, inp):
         self.inp = inp
         self.feat = self.encoder(inp)
