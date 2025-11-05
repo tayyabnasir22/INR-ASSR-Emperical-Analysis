@@ -4,5 +4,5 @@ from Configurations.ValidationDataConfigurations import ValidationDataConfigurat
 @dataclass
 class ValidationConfigurations:
     model_path: str
-    logger_path: str
+    save_path: str
     data_configurations: ValidationDataConfigurations

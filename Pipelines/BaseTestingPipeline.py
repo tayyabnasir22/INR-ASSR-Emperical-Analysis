@@ -43,7 +43,7 @@ class BaseTestingPipeline(PipelineBase):
                 eval_scale=self._eval_scale,
                 base_folder2=self._valid_data_pathScale,
             ),
-            logger_path=self._model_load_path
+            save_path=self._model_load_path
         )
 
     def CreateDataLoaders(self,):

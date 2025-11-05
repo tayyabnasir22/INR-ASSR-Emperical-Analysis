@@ -28,11 +28,13 @@ class Logger:
             return '{:.1f}s'.format(t)
         
     @staticmethod
-    def Log(obj, filename='log.txt'):
-        print(obj)
-        if Logger._log_path is not None:
-            with open(os.path.join(Logger._log_path, filename), 'a') as f:
-                print(obj, file=f)
+    def Log(*args, sep=' ', end='\n', filename='log.txt'):
+        # Print to console
+        print(*args, sep=sep, end=end)
+        if Logger.GetLogPath() is not None:
+            log_file = os.path.join(Logger.GetLogPath(), filename)
+            with open(log_file, 'a', encoding='utf-8') as f:
+                print(*args, sep=sep, end=end, file=f)
 
     @staticmethod
     def LogSummaryWriter(

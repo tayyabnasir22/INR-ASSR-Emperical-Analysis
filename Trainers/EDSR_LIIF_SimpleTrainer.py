@@ -1,9 +1,8 @@
 from ModelFactories.EDSR_LIIF_Factory import EDSR_LIIF_Factory
 from Pipelines.BaseTrainingPipeline import BaseTrainingPipeline
 from Trainers.BaseTrainer import BaseTrainer
+from Utilities.PathManager import PathManager
 from Utilities.TrainingHelpers import TrainingHelpers
-from tensorboardX import SummaryWriter
-import os
 
 class EDSR_LIIF_SimpleTrainer(BaseTrainer):
     def TrainModel(self):
@@ -15,7 +14,8 @@ class EDSR_LIIF_SimpleTrainer(BaseTrainer):
         factory.BuildModel(pipeline)
 
         # 3. Call the training
-        writer = SummaryWriter(
-            os.path.join(pipeline.configurations.save_path, 'tensorboard')
+        logger, writer = PathManager.SetModelSavePath(
+            pipeline.configurations.save_path, False
         )
-        TrainingHelpers.Train(pipeline, writer, 0, False)
+
+        TrainingHelpers.Train(pipeline, logger, writer, 0, False)
