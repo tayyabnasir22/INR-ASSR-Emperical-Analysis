@@ -74,7 +74,7 @@ class Logger:
         # If you already have a DataFrame 'df', append
         # Otherwise, create a new one
         os.makedirs(out_path, exist_ok=True)
-        OUT_PATH = os.path.join(out_path, test_type + '_' + "metrics.csv")
+        OUT_PATH = os.path.join(out_path, test_type.value + '_' + "metrics.csv")
         try:
             df = pd.read_csv(OUT_PATH)   # load existing file
         except:

@@ -1,0 +1,6 @@
+from dataclasses import dataclass
+from Configurations.PatchedValidationConfigurations import PatchedValidationConfigurations
+
+@dataclass
+class OverlappedPatchedValidationConfigurations(PatchedValidationConfigurations):
+    overlap_size: int

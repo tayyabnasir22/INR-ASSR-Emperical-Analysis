@@ -6,8 +6,8 @@ from Utilities.DataLoaders import DataLoaders
 
 class BaseTestingPairedPipeline(BaseTestingPipeline):
     def __init__(self):
-        self._valid_data_path = './datasets/DIV2K_valid_HR'
-        self._valid_data_pathScale = './datasets/DIV2K_valid_HR'
+        self._valid_data_path = './datasets/DIV2K/DIV2K_valid_HR'
+        self._valid_data_pathScale = './datasets/DIV2K/DIV2K_valid_LRbicx2'
         self._model_load_path = './model_states'
         self._model_name = 'last.pth'
         self._total_example = 100
@@ -20,8 +20,9 @@ class BaseTestingPairedPipeline(BaseTestingPipeline):
         self.validation_data_loader = DataLoaders.GetTestingDataLoader(
             SRImplicitPaired(
                 dataset=PairedImageFolders(
-                    self.configurations.data_configurations.base_folder, 
-                    self.configurations.data_configurations.base_folder2,
+                    # The scaled down version is to be passed as the first argument
+                    self.configurations.data_configurations.base_folder2, 
+                    self.configurations.data_configurations.base_folder,
                 ),
                 inp_size=None,
             ),
