@@ -17,15 +17,17 @@ class BaseTestingPairedPipeline(BaseTestingPipeline):
         patch_size_valid: int = 48,
         benchmark: BenchmarkType = BenchmarkType.DIV2K,
     ):
-        self._valid_data_path = valid_data_path
+        super().__init__(
+            valid_data_path=valid_data_path,
+            model_load_path=model_load_path,
+            model_name=model_name,
+            total_example=total_example,
+            eval_scale=eval_scale,
+            eval_batch_size=eval_batch_size,
+            patch_size_valid=patch_size_valid,
+            benchmark=benchmark,
+        )
         self._valid_data_pathScale = valid_data_pathScale
-        self._model_load_path = model_load_path
-        self._model_name = model_name
-        self._total_example = total_example
-        self._eval_scale = eval_scale
-        self._eval_batch_Size = eval_batch_size
-        self._patch_size_valid = patch_size_valid
-        self._benchmark = benchmark
 
 
     def CreateDataLoaders(self,):

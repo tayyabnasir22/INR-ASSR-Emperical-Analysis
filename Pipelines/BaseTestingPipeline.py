@@ -8,7 +8,6 @@ from Pipelines.PipelineBase import PipelineBase
 import torch.nn as nn
 import torch
 from Utilities.DataLoaders import DataLoaders
-from Utilities.PathManager import PathManager
 import os
 
 class BaseTestingPipeline(PipelineBase):
