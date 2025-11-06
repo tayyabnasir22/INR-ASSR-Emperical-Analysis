@@ -3,6 +3,8 @@ from ModelFactories.BaseModelFactory import BaseModelFactory
 from Models.RunningAverage import RunningAverage
 from Models.TestingStrategy import TestingStrategy
 from Models.Timer import Timer
+from Pipelines.BaseOverlapPatchedTestingPipeline import BaseOverlapPatchedTestingPipeline
+from Pipelines.BasePatchedTestingPipeline import BasePatchedTestingPipeline
 from Pipelines.BaseTestingPipeline import BaseTestingPipeline
 from Utilities.LPIPSManager import LPIPSManager
 from Utilities.Logger import Logger
@@ -15,37 +17,50 @@ class BaseValidator(ABC):
     def TestModel(self,):
         pass
 
+
+    def _GetPredictionForSimple(self, pipeline: BaseTestingPipeline, lpips_model: LearnedPerceptualImagePatchSimilarity):
+        return PredictionHelpers.EvaluteForTesting(
+                pipeline.validation_data_loader, 
+                pipeline.model, 
+                lpips_model, 
+                pipeline.configurations.data_configurations.input_nomrlizer_range, 
+                pipeline.configurations.data_configurations.eval_batch_size, 
+                pipeline.configurations.data_configurations.eval_scale, 
+                pipeline.configurations.data_configurations.benchmark_type
+            )
+
+    def _GetPredictionForPatched(self, pipeline: BasePatchedTestingPipeline, lpips_model: LearnedPerceptualImagePatchSimilarity):
+        return PredictionHelpers.EvaluteForPatchedTesting(
+                pipeline.validation_data_loader, 
+                pipeline.model, 
+                lpips_model, 
+                pipeline.configurations.data_configurations.input_nomrlizer_range, 
+                pipeline.configurations.data_configurations.eval_batch_size, 
+                pipeline.configurations.breakdown_patch_size,
+                pipeline.configurations.data_configurations.eval_scale, 
+                pipeline.configurations.data_configurations.benchmark_type
+            )
+    
+    def _GetPredictionForOverlapPatched(self, pipeline: BaseOverlapPatchedTestingPipeline, lpips_model: LearnedPerceptualImagePatchSimilarity):
+        return PredictionHelpers.EvaluteForOverlapPatchedTesting(
+                pipeline.validation_data_loader, 
+                pipeline.model, 
+                lpips_model, 
+                pipeline.configurations.data_configurations.input_nomrlizer_range, 
+                pipeline.configurations.data_configurations.eval_batch_size,
+                pipeline.configurations.breakdown_patch_size,
+                pipeline.configurations.overlap_size,
+                pipeline.configurations.data_configurations.eval_scale, 
+                pipeline.configurations.data_configurations.benchmark_type
+            )
+
     def _GetPrediction(self, pipeline: BaseTestingPipeline, lpips_model: LearnedPerceptualImagePatchSimilarity, test_type: TestingStrategy):
         if test_type == TestingStrategy.Simple:
-            return PredictionHelpers.EvaluteForTesting(
-                pipeline.validation_data_loader, 
-                pipeline.model, 
-                lpips_model, 
-                pipeline.configurations.data_configurations.input_nomrlizer_range, 
-                pipeline.configurations.data_configurations.eval_batch_size, 
-                pipeline.configurations.data_configurations.eval_scale, 
-                pipeline.configurations.data_configurations.benchmark_type
-            )
+            return self._GetPredictionForSimple(pipeline, lpips_model)
         elif test_type == TestingStrategy.Patched:
-            return PredictionHelpers.EvaluteForPatchedTesting(
-                pipeline.validation_data_loader, 
-                pipeline.model, 
-                lpips_model, 
-                pipeline.configurations.data_configurations.input_nomrlizer_range, 
-                pipeline.configurations.data_configurations.eval_batch_size, 
-                pipeline.configurations.data_configurations.eval_scale, 
-                pipeline.configurations.data_configurations.benchmark_type
-            )
+            return self._GetPredictionForPatched(pipeline, lpips_model)
         elif test_type == TestingStrategy.OverlappingPatched:
-            return PredictionHelpers.EvaluteForOverlapPatchedTesting(
-                pipeline.validation_data_loader, 
-                pipeline.model, 
-                lpips_model, 
-                pipeline.configurations.data_configurations.input_nomrlizer_range, 
-                pipeline.configurations.data_configurations.eval_batch_size, 
-                pipeline.configurations.data_configurations.eval_scale, 
-                pipeline.configurations.data_configurations.benchmark_type
-            )
+            return self._GetPredictionForOverlapPatched(pipeline, lpips_model)
         else:
             raise NotImplemented('Testing strategy not recognized')
 
