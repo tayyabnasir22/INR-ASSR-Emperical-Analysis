@@ -38,10 +38,10 @@ class BasePatchedTestingPairedPipeline(BasePatchedTestingPipeline):
                 dataset=PairedImageFolders(
                     # The scaled down version is to be passed as the first argument
                     self.configurations.data_configurations.base_folder2, 
-                    self.configurations.data_configurations.base_folder,
-                    self.configurations.breakdown_patch_size,
+                    self.configurations.data_configurations.base_folder,                    
                 ),
                 inp_size=None,
+                patch_size=self.configurations.breakdown_patch_size,
             ),
             self.configurations.data_configurations.batch_size
         )
