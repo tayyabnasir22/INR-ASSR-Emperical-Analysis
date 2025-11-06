@@ -1,14 +1,14 @@
 from Models.BenchmarkType import BenchmarkType
 from Models.NormalizerRange import NormalizerRange
-from Configurations.OverlappedPatchedValidationConfigurations import OverlappedPatchedValidationConfigurations
+from Configurations.PatchedValidationConfigurations import PatchedValidationConfigurations
 from Configurations.ValidationDataConfigurations import ValidationDataConfigurations
 from DataProcessors.ImageFolder import ImageFolder
-from DataProcessors.SRImplicitDownsampledOverlapPatched import SRImplicitDownsampledOverlapPatched
-from Pipelines.BaseTestingPipeline import BaseTestingPipeline
+from DataProcessors.SRImplicitDownsampledPatched import SRImplicitDownsampledPatched
+from Pipelines.Validation.BaseTestingPipeline import BaseTestingPipeline
 from Utilities.DataLoaders import DataLoaders
 import os
 
-class BaseOverlapPatchedTestingPipeline(BaseTestingPipeline):
+class BasePatchedTestingPipeline(BaseTestingPipeline):
     def __init__(
         self,
         valid_data_path: str = './datasets/DIV2K/DIV2K_valid_HR',
@@ -20,7 +20,6 @@ class BaseOverlapPatchedTestingPipeline(BaseTestingPipeline):
         patch_size_valid: int = 48,
         benchmark: BenchmarkType = BenchmarkType.DIV2K,
         breakdown_patch_size: int = 100,
-        overlap_size: int = 20,
     ):
         super().__init__(
             valid_data_path=valid_data_path,
@@ -33,11 +32,10 @@ class BaseOverlapPatchedTestingPipeline(BaseTestingPipeline):
             benchmark=benchmark,
         )
         self._breakdown_patch_size = breakdown_patch_size
-        self._overlap_size = overlap_size
 
 
     def LoadConfigurations(self,):
-        self.configurations = OverlappedPatchedValidationConfigurations(
+        self.configurations = PatchedValidationConfigurations(
             model_path=os.path.join(self._model_load_path, self._model_name),
             data_configurations=ValidationDataConfigurations(
                 patch_size=self._patch_size_valid, 
@@ -54,13 +52,12 @@ class BaseOverlapPatchedTestingPipeline(BaseTestingPipeline):
                 base_folder2=self._valid_data_pathScale,
             ),
             save_path=self._model_load_path,
-            breakdown_patch_size=self._breakdown_patch_size,
-            overlap_size=self._overlap_size
+            breakdown_patch_size=self._breakdown_patch_size
         )
 
     def CreateDataLoaders(self,):
         self.validation_data_loader = DataLoaders.GetTestingDataLoader(
-            SRImplicitDownsampledOverlapPatched(
+            SRImplicitDownsampledPatched(
                 dataset=ImageFolder(
                     self.configurations.data_configurations.base_folder, 
                 ),
@@ -68,7 +65,6 @@ class BaseOverlapPatchedTestingPipeline(BaseTestingPipeline):
                 scale_min=self.configurations.data_configurations.eval_scale,
                 scale_max=self.configurations.data_configurations.eval_scale,
                 patch_size=self.configurations.breakdown_patch_size,
-                overlap=self.configurations.overlap_size,
                 augment=self.configurations.data_configurations.augment,
             ),
             self.configurations.data_configurations.batch_size

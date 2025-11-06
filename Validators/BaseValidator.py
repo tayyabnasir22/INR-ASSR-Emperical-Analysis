@@ -3,9 +3,9 @@ from ModelFactories.BaseModelFactory import BaseModelFactory
 from Models.RunningAverage import RunningAverage
 from Models.TestingStrategy import TestingStrategy
 from Models.Timer import Timer
-from Pipelines.BaseOverlapPatchedTestingPipeline import BaseOverlapPatchedTestingPipeline
-from Pipelines.BasePatchedTestingPipeline import BasePatchedTestingPipeline
-from Pipelines.BaseTestingPipeline import BaseTestingPipeline
+from Pipelines.Validation.BaseOverlapPatchedTestingPipeline import BaseOverlapPatchedTestingPipeline
+from Pipelines.Validation.BasePatchedTestingPipeline import BasePatchedTestingPipeline
+from Pipelines.Validation.BaseTestingPipeline import BaseTestingPipeline
 from Utilities.LPIPSManager import LPIPSManager
 from Utilities.Logger import Logger
 from Utilities.PredictionHelpers import PredictionHelpers

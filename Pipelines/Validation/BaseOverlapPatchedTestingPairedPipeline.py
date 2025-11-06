@@ -1,15 +1,14 @@
+from DataProcessors.SRImplicitPairedOverlapPatched import SRImplicitPairedOverlapPatched
 from Models.BenchmarkType import BenchmarkType
 from DataProcessors.PairedImageFolder import PairedImageFolders
-from DataProcessors.SRImplicitPairedPatched import SRImplicitPairedPatched
-from Pipelines.BasePatchedTestingPipeline import BasePatchedTestingPipeline
+from Pipelines.Validation.BaseOverlapPatchedTestingPipeline import BaseOverlapPatchedTestingPipeline
 from Utilities.DataLoaders import DataLoaders
-import os
 
-class BasePatchedTestingPairedPipeline(BasePatchedTestingPipeline):
+class BaseOverlapPatchedTestingPairedPipeline(BaseOverlapPatchedTestingPipeline):
     def __init__(
         self,
         valid_data_path: str = './datasets/DIV2K/DIV2K_valid_HR',
-        valid_data_pathScale: str = './datasets/DIV2K/DIV2K_valid_LRbicx2',
+        valid_data_pathScale: str = './datasets/DIV2K/DIV2K_valid_LRbicx4', # Make sure the directory matches the scale value of eval_scale
         model_load_path: str = './model_states',
         model_name: str = 'last.pth',
         total_example: int = 100,
@@ -18,6 +17,7 @@ class BasePatchedTestingPairedPipeline(BasePatchedTestingPipeline):
         patch_size_valid: int = 48,
         benchmark: BenchmarkType = BenchmarkType.DIV2K,
         breakdown_patch_size: int = 100,
+        overlap_size: int = 20,
     ):
         super().__init__(
             valid_data_path=valid_data_path,
@@ -29,19 +29,21 @@ class BasePatchedTestingPairedPipeline(BasePatchedTestingPipeline):
             patch_size_valid=patch_size_valid,
             benchmark=benchmark,
             breakdown_patch_size=breakdown_patch_size,
+            overlap_size=overlap_size
         )
         self._valid_data_pathScale = valid_data_pathScale
 
     def CreateDataLoaders(self,):
         self.validation_data_loader = DataLoaders.GetTestingDataLoader(
-            SRImplicitPairedPatched(
+            SRImplicitPairedOverlapPatched(
                 dataset=PairedImageFolders(
                     # The scaled down version is to be passed as the first argument
                     self.configurations.data_configurations.base_folder2, 
-                    self.configurations.data_configurations.base_folder,                    
+                    self.configurations.data_configurations.base_folder,
                 ),
                 inp_size=None,
                 patch_size=self.configurations.breakdown_patch_size,
+                overlap=self.configurations.overlap_size,
             ),
             self.configurations.data_configurations.batch_size
         )

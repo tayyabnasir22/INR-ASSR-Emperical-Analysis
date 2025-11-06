@@ -1,6 +1,6 @@
 from ModelFactories.EDSR_LIIF_Factory import EDSR_LIIF_Factory
 from Models.TestingStrategy import TestingStrategy
-from Pipelines.BaseOverlapPatchedTestingPipeline import BaseOverlapPatchedTestingPipeline
+from Pipelines.Validation.BaseOverlapPatchedTestingPipeline import BaseOverlapPatchedTestingPipeline
 from Validators.BaseValidator import BaseValidator
 
 class EDSR_LIIF_OverlapPatchedValidator(BaseValidator):

@@ -1,20 +1,96 @@
-from abc import ABC, abstractmethod
 from ModelFactories.BaseModelFactory import BaseModelFactory
-from Pipelines.BaseTrainingPipeline import BaseTrainingPipeline
+from Models.DecoderType import DecoderType
+from Models.EncoderType import EncoderType
+from Models.RecipeType import RecipeType
+from Pipelines.Training.BaseTrainingPipeline import BaseTrainingPipeline
+from Pipelines.Training.GradientLossTrainingPipeline import GradientLossTrainingPipeline
+from Pipelines.Training.GramL1LossTrainingPipeline import GramL1LossTrainingPipeline
+from Pipelines.Training.SGDRTrainingPipeline import SGDRTrainingPipeline
 from Utilities.PathManager import PathManager
 from Utilities.TrainingHelpers import TrainingHelpers
 
-class BaseTrainer(ABC):
-    @abstractmethod
-    def TrainModel(self,):
-        pass
+class BaseTrainer:
+    def __init__(self, encoder: EncoderType, decoder: DecoderType, recipe: RecipeType, input_patch: int = 48, scale_range: list[int, int] = [1, 4]):
+        self._encoder = encoder
+        self._decoder = decoder
+        self._recipe = recipe
+        self._input_patch = input_patch
+        self._scale_range = scale_range
+
+        base_path = '_'.join(
+            [
+                './model_states',
+                self._encoder.name,
+                self._decoder.name,
+                self._recipe.name,
+                'Patch',
+                str(self._input_patch),
+                'Scale',
+                str(self._scale_range[0]),
+                str(self._scale_range[1]),
+
+            ]
+        )
+
+        self._model_save_path = base_path + ''
+        self._model_load_path = base_path + '/last.pth'
+
+    def _GetPipeline(self,):
+        if self._recipe == RecipeType.Simple:
+            return BaseTrainingPipeline(
+                scale_range=self._scale_range,
+                patch_size_train=self._input_patch,
+                patch_size_valid=self._input_patch,
+                model_save_path=self._model_save_path,
+                model_load_path=self._model_load_path,
+            )
+        elif self._recipe == RecipeType.GradLoss:
+            return GradientLossTrainingPipeline(
+                scale_range=self._scale_range,
+                patch_size_train=self._input_patch,
+                patch_size_valid=self._input_patch,
+                model_save_path=self._model_save_path,
+                model_load_path=self._model_load_path,
+            )
+        elif self._recipe == RecipeType.GradLoss:
+            return GramL1LossTrainingPipeline(
+                scale_range=self._scale_range,
+                patch_size_train=self._input_patch,
+                patch_size_valid=self._input_patch,
+                model_save_path=self._model_save_path,
+                model_load_path=self._model_load_path,
+            )
+        elif self._recipe == RecipeType.GradLoss:
+            return SGDRTrainingPipeline(
+                scale_range=self._scale_range,
+                patch_size_train=self._input_patch,
+                patch_size_valid=self._input_patch,
+                model_save_path=self._model_save_path,
+                model_load_path=self._model_load_path,
+            )
+        else:
+            raise NotImplemented('Pipeline not found')
+
+    def _GetModelFactory(self, pipeline: BaseTrainingPipeline):
+        return BaseModelFactory()
 
     def _RunTrain(self, pipeline: BaseTrainingPipeline, factory: BaseModelFactory):
-        factory.BuildModel(pipeline)
+        factory.BuildModel(pipeline, self._encoder, self._decoder)
 
-        # 3. Call the training
+        # Call the training
         logger, writer = PathManager.SetModelSavePath(
             pipeline.configurations.save_path, False
         )
 
         TrainingHelpers.Train(pipeline, logger, writer, 0, False)
+
+    def TrainModel(self,):
+        # 1. Init thre required Pipeline
+        pipeline = self._GetPipeline()
+
+        # 2. Build the model
+        factory = self._GetModelFactory(pipeline)
+
+        # 3. Train the model using the factory
+        self._RunTrain(pipeline, factory)
+    

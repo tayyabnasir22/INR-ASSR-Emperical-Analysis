@@ -28,7 +28,7 @@ class BaseTrainingPipeline(PipelineBase):
         patch_size_train: int = 48,
         patch_size_valid: int = 48,
         start_learning_rate: float = 4.e-4,
-        scale_range: list[int, int] = [4,4],
+        scale_range: list[int, int] = [1,4],
         total_examples: int = 800,
         epochs: int = 100,
         milestones_count: int = 4,
