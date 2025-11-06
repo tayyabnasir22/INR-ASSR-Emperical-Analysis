@@ -1,5 +1,5 @@
 from ModelFactories.EDSR_LIIF_Factory import EDSR_LIIF_Factory
-from Pipelines.BaseTrainingPipeline import BaseTrainingPipeline
+from Pipelines.Training.BaseTrainingPipeline import BaseTrainingPipeline
 from Trainers.BaseTrainer import BaseTrainer
 
 class EDSR_LIIF_SimpleTrainer(BaseTrainer):

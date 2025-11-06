@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from ModelFactories.BaseModelFactory import BaseModelFactory
-from Pipelines.BaseTrainingPipeline import BaseTrainingPipeline
+from Pipelines.Training.BaseTrainingPipeline import BaseTrainingPipeline
 from Utilities.PathManager import PathManager
 from Utilities.TrainingHelpers import TrainingHelpers
 

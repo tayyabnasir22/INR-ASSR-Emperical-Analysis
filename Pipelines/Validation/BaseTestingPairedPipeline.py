@@ -1,7 +1,7 @@
 from Models.BenchmarkType import BenchmarkType
 from DataProcessors.PairedImageFolder import PairedImageFolders
 from DataProcessors.SRImplicitPaired import SRImplicitPaired
-from Pipelines.BaseTestingPipeline import BaseTestingPipeline
+from Pipelines.Validation.BaseTestingPipeline import BaseTestingPipeline
 from Utilities.DataLoaders import DataLoaders
 
 class BaseTestingPairedPipeline(BaseTestingPipeline):

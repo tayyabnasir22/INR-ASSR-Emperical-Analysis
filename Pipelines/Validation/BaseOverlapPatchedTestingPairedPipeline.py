@@ -1,7 +1,7 @@
 from DataProcessors.SRImplicitPairedOverlapPatched import SRImplicitPairedOverlapPatched
 from Models.BenchmarkType import BenchmarkType
 from DataProcessors.PairedImageFolder import PairedImageFolders
-from Pipelines.BaseOverlapPatchedTestingPipeline import BaseOverlapPatchedTestingPipeline
+from Pipelines.Validation.BaseOverlapPatchedTestingPipeline import BaseOverlapPatchedTestingPipeline
 from Utilities.DataLoaders import DataLoaders
 
 class BaseOverlapPatchedTestingPairedPipeline(BaseOverlapPatchedTestingPipeline):

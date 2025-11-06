@@ -1,6 +1,6 @@
 from ModelFactories.EDSR_LIIF_Factory import EDSR_LIIF_Factory
 from Models.TestingStrategy import TestingStrategy
-from Pipelines.BasePatchedTestingPipeline import BasePatchedTestingPipeline
+from Pipelines.Validation.BasePatchedTestingPipeline import BasePatchedTestingPipeline
 from Validators.BaseValidator import BaseValidator
 
 class EDSR_LIIF_PatchedValidator(BaseValidator):
