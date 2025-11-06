@@ -66,7 +66,7 @@ class Logger:
         results['Dataset'] = dataset
         results['Scale'] = scale
         results['ModelPath'] = model_path
-        results['TestType'] = test_type
+        results['TestType'] = test_type.name
         results['CreatedDate'] = datetime.now()
 
         row_df = pd.DataFrame([results])
@@ -74,7 +74,7 @@ class Logger:
         # If you already have a DataFrame 'df', append
         # Otherwise, create a new one
         os.makedirs(out_path, exist_ok=True)
-        OUT_PATH = os.path.join(out_path, test_type.value + '_' + "metrics.csv")
+        OUT_PATH = os.path.join(out_path, "metrics.csv")
         try:
             df = pd.read_csv(OUT_PATH)   # load existing file
         except:

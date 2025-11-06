@@ -1,4 +1,3 @@
-from DataProcessors.FolderReaderBase import FolderReaderBase
 from DataProcessors.SRDataProcessorBase import SRDataProcessorBase
 from torch.utils.data import DataLoader
 
