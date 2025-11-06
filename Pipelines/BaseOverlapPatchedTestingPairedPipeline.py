@@ -1,7 +1,6 @@
 from DataProcessors.SRImplicitPairedOverlapPatched import SRImplicitPairedOverlapPatched
 from Models.BenchmarkType import BenchmarkType
 from DataProcessors.PairedImageFolder import PairedImageFolders
-from DataProcessors.SRImplicitPaired import SRImplicitPaired
 from Pipelines.BaseOverlapPatchedTestingPipeline import BaseOverlapPatchedTestingPipeline
 from Utilities.DataLoaders import DataLoaders
 
@@ -20,19 +19,19 @@ class BaseOverlapPatchedTestingPairedPipeline(BaseOverlapPatchedTestingPipeline)
         breakdown_patch_size: int = 100,
         overlap_size: int = 20,
     ):
-        self._valid_data_path = valid_data_path
+        super().__init__(
+            valid_data_path=valid_data_path,
+            model_load_path=model_load_path,
+            model_name=model_name,
+            total_example=total_example,
+            eval_scale=eval_scale,
+            eval_batch_size=eval_batch_size,
+            patch_size_valid=patch_size_valid,
+            benchmark=benchmark,
+            breakdown_patch_size=breakdown_patch_size,
+            overlap_size=overlap_size
+        )
         self._valid_data_pathScale = valid_data_pathScale
-        self._model_load_path = model_load_path
-        self._model_name = model_name
-        self._total_example = total_example
-        self._eval_scale = eval_scale
-        self._eval_batch_Size = eval_batch_size
-        self._patch_size_valid = patch_size_valid
-        self._benchmark = benchmark
-
-        self._breakdown_patch_size = breakdown_patch_size
-        self._overlap_size = overlap_size
-
 
     def CreateDataLoaders(self,):
         self.validation_data_loader = DataLoaders.GetTestingDataLoader(

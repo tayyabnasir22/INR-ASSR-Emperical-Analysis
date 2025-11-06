@@ -1,9 +1,6 @@
-from Configurations.PatchedValidationConfigurations import PatchedValidationConfigurations
-from Configurations.ValidationDataConfigurations import ValidationDataConfigurations
 from Models.BenchmarkType import BenchmarkType
 from DataProcessors.PairedImageFolder import PairedImageFolders
 from DataProcessors.SRImplicitPairedPatched import SRImplicitPairedPatched
-from Models.NormalizerRange import NormalizerRange
 from Pipelines.BasePatchedTestingPipeline import BasePatchedTestingPipeline
 from Utilities.DataLoaders import DataLoaders
 import os
@@ -22,17 +19,18 @@ class BasePatchedTestingPairedPipeline(BasePatchedTestingPipeline):
         benchmark: BenchmarkType = BenchmarkType.DIV2K,
         breakdown_patch_size: int = 100,
     ):
-        self._valid_data_path = valid_data_path
+        super().__init__(
+            valid_data_path=valid_data_path,
+            model_load_path=model_load_path,
+            model_name=model_name,
+            total_example=total_example,
+            eval_scale=eval_scale,
+            eval_batch_size=eval_batch_size,
+            patch_size_valid=patch_size_valid,
+            benchmark=benchmark,
+            breakdown_patch_size=breakdown_patch_size,
+        )
         self._valid_data_pathScale = valid_data_pathScale
-        self._model_load_path = model_load_path
-        self._model_name = model_name
-        self._total_example = total_example
-        self._eval_scale = eval_scale
-        self._eval_batch_Size = eval_batch_size
-        self._patch_size_valid = patch_size_valid
-        self._benchmark = benchmark
-        
-        self._breakdown_patch_size = breakdown_patch_size
 
     def CreateDataLoaders(self,):
         self.validation_data_loader = DataLoaders.GetTestingDataLoader(
