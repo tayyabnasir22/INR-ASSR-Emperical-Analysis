@@ -17,15 +17,25 @@ import torch
 from Utilities.PathManager import PathManager
 
 class BaseTrainingPipeline(PipelineBase):
-    def __init__(self):
-        self._trian_data_path = './datasets/DIV2K_train_HR'
-        self._valid_data_path = './datasets/DIV2K/DIV2K_valid_HR'
-        self._model_save_path = './model_states'
-        self._model_load_path = './model_states/last.pth'
-        self._batch_Size = 32
-        self._train_repeat = 40
-        self._patch_size_train = 48
-        self._patch_size_valid = 48
+    def __init__(
+        self,
+        train_data_path: str = './datasets/DIV2K_train_HR',
+        valid_data_path: str = './datasets/DIV2K/DIV2K_valid_HR',
+        model_save_path: str = './model_states',
+        model_load_path: str = './model_states/last.pth',
+        batch_size: int = 32,
+        train_repeat: int = 40,
+        patch_size_train: int = 48,
+        patch_size_valid: int = 48,
+    ):
+        self._train_data_path = train_data_path
+        self._valid_data_path = valid_data_path
+        self._model_save_path = model_save_path
+        self._model_load_path = model_load_path
+        self._batch_Size = batch_size
+        self._train_repeat = train_repeat
+        self._patch_size_train = patch_size_train
+        self._patch_size_valid = patch_size_valid
 
         # -1 to when starting fresh for the optimizers and schedulars to work to indicate 0->1 epoch
         # Last successfully completed epoch for example 50 if the 50th epoch was completed to mark 50->51 epoch

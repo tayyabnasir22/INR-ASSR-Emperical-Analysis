@@ -5,16 +5,28 @@ from Pipelines.BaseTestingPipeline import BaseTestingPipeline
 from Utilities.DataLoaders import DataLoaders
 
 class BaseTestingPairedPipeline(BaseTestingPipeline):
-    def __init__(self):
-        self._valid_data_path = './datasets/DIV2K/DIV2K_valid_HR'
-        self._valid_data_pathScale = './datasets/DIV2K/DIV2K_valid_LRbicx2'
-        self._model_load_path = './model_states'
-        self._model_name = 'last.pth'
-        self._total_example = 100
-        self._eval_scale = 4
-        self._eval_batch_Size = 300
-        self._patch_size_valid = 48
-        self._benchmark = BenchmarkType.DIV2K
+    def __init__(
+        self,
+        valid_data_path: str = './datasets/DIV2K/DIV2K_valid_HR',
+        valid_data_pathScale: str = './datasets/DIV2K/DIV2K_valid_LRbicx2',
+        model_load_path: str = './model_states',
+        model_name: str = 'last.pth',
+        total_example: int = 100,
+        eval_scale: int = 4,
+        eval_batch_size: int = 300,
+        patch_size_valid: int = 48,
+        benchmark: BenchmarkType = BenchmarkType.DIV2K,
+    ):
+        self._valid_data_path = valid_data_path
+        self._valid_data_pathScale = valid_data_pathScale
+        self._model_load_path = model_load_path
+        self._model_name = model_name
+        self._total_example = total_example
+        self._eval_scale = eval_scale
+        self._eval_batch_Size = eval_batch_size
+        self._patch_size_valid = patch_size_valid
+        self._benchmark = benchmark
+
 
     def CreateDataLoaders(self,):
         self.validation_data_loader = DataLoaders.GetTestingDataLoader(
