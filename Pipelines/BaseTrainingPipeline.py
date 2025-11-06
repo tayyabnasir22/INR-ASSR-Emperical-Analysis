@@ -14,39 +14,70 @@ from torch.optim.optimizer import Optimizer
 import torch.nn as nn
 import torch
 
-from Utilities.PathManager import PathManager
+from Utilities.StatsHelpers import StatsHelpers
 
 class BaseTrainingPipeline(PipelineBase):
-    def __init__(self):
-        self._trian_data_path = './datasets/DIV2K_train_HR'
-        self._valid_data_path = './datasets/DIV2K/DIV2K_valid_HR'
-        self._model_save_path = './model_states'
-        self._model_load_path = './model_states/last.pth'
-        self._batch_Size = 32
-        self._train_repeat = 40
-        self._patch_size_train = 48
-        self._patch_size_valid = 48
+    def __init__(
+        self,
+        train_data_path: str = './datasets/DIV2K_train_HR',
+        valid_data_path: str = './datasets/DIV2K/DIV2K_valid_HR',
+        model_save_path: str = './model_states',
+        model_load_path: str = './model_states/last.pth',
+        batch_size: int = 32,
+        train_repeat: int = 40,
+        patch_size_train: int = 48,
+        patch_size_valid: int = 48,
+        start_learning_rate: float = 4.e-4,
+        scale_range: list[int, int] = [4,4],
+        total_examples: int = 800,
+        epochs: int = 100,
+        milestones_count: int = 4,
+        epoch_val: int = 1,
+        epoch_save: int = 1,
+        gamma_schedular: float = 0.5,
+        benchmark_type: BenchmarkType = BenchmarkType.DIV2K,
+    ):
+        self._train_data_path = train_data_path
+        self._valid_data_path = valid_data_path
+        self._model_save_path = model_save_path
+        self._model_load_path = model_load_path
+        self._batch_Size = batch_size
+        self._train_repeat = train_repeat
+        self._patch_size_train = patch_size_train
+        self._patch_size_valid = patch_size_valid
 
         # -1 to when starting fresh for the optimizers and schedulars to work to indicate 0->1 epoch
         # Last successfully completed epoch for example 50 if the 50th epoch was completed to mark 50->51 epoch
         # Make sure to add + 1 before training to save epoch completed number properly
         self.start_epoch = -1
 
+
+
+        self._start_learning_rate = start_learning_rate
+        self._scale_range = scale_range
+        self._total_examples = total_examples
+        self._epochs = epochs
+        self._milestones_count = milestones_count
+        self._epoch_val = epoch_val
+        self._epoch_save = epoch_save
+        self._gamma_schedular = gamma_schedular
+        self._benchmark_type = benchmark_type
+
     def InitModel(self, model: nn.Module):
         self.model = model
 
     def LoadConfigurations(self,):
         self.configurations = TrainingConfigurations(
-            optimizer={'learning_rate': 4.e-4},
+            optimizer={'learning_rate': self._start_learning_rate},
             data_configurations=TrainingDataConfigurations(
                 patch_size=self._patch_size_train, 
                 augment=True, 
                 batch_size=self._batch_Size, 
-                base_folder=self._trian_data_path, 
+                base_folder=self._train_data_path, 
                 repeat=self._train_repeat, 
-                scale_range=[1,4], 
+                scale_range=self._scale_range, 
                 input_nomrlizer_range=NormalizerRange(), 
-                total_examples=800,
+                total_examples=self._total_examples,
             ),
             validation_data_configurations=ValidationDataConfigurations(
                 patch_size=self._patch_size_valid, 
@@ -57,17 +88,17 @@ class BaseTrainingPipeline(PipelineBase):
                 scale_range=[4,4], 
                 input_nomrlizer_range=NormalizerRange(), 
                 total_examples=100, 
-                benchmark_type=BenchmarkType.DIV2K, 
+                benchmark_type=self._benchmark_type, 
                 eval_batch_size=100, 
                 eval_scale=4,
                 base_folder2='',
             ),
-            lr_scheduler={'milestones': [2, 4, 6, 8], 'gamma': 0.5},
-            epochs=1000,
+            lr_scheduler={'milestones': StatsHelpers.GetMulitStepMilestones(self._epochs, self._milestones_count), 'gamma': self._gamma_schedular},
+            epochs=self._epochs,
             save_path=self._model_save_path,
             resume_path=self._model_load_path,
-            epoch_val=1,
-            epoch_save=1,
+            epoch_val=self._epoch_val,
+            epoch_save=self._epoch_save,
             monitor_metric='psnr',
         )
 
