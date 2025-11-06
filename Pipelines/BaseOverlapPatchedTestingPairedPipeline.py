@@ -8,7 +8,7 @@ class BaseOverlapPatchedTestingPairedPipeline(BaseOverlapPatchedTestingPipeline)
     def __init__(
         self,
         valid_data_path: str = './datasets/DIV2K/DIV2K_valid_HR',
-        valid_data_pathScale: str = './datasets/DIV2K/DIV2K_valid_LRbicx2',
+        valid_data_pathScale: str = './datasets/DIV2K/DIV2K_valid_LRbicx4', # Make sure the directory matches the scale value of eval_scale
         model_load_path: str = './model_states',
         model_name: str = 'last.pth',
         total_example: int = 100,
