@@ -28,8 +28,8 @@ class BaseModelFactory:
 
     def BuildModel(self, pipeline: PipelineBase, encoder: EncoderType, decoder: DecoderType):
         # Create the ecnoder and decoder
-        encoder = self._encoders(encoder)().cuda()
-        model = self._decoders(decoder)(encoder).cuda()
+        encoder = self._encoders[encoder]().cuda()
+        model = self._decoders[decoder](encoder).cuda()
 
         # Call the Pipeline chains
         pipeline.LoadConfigurations()
