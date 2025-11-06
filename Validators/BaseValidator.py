@@ -8,11 +8,46 @@ from Utilities.LPIPSManager import LPIPSManager
 from Utilities.Logger import Logger
 from Utilities.PredictionHelpers import PredictionHelpers
 import os
+from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity
 
 class BaseValidator(ABC):
     @abstractmethod
     def TestModel(self,):
         pass
+
+    def _GetPrediction(self, pipeline: BaseTestingPipeline, lpips_model: LearnedPerceptualImagePatchSimilarity, test_type: TestingStrategy):
+        if test_type == TestingStrategy.Simple:
+            return PredictionHelpers.EvaluteForTesting(
+                pipeline.validation_data_loader, 
+                pipeline.model, 
+                lpips_model, 
+                pipeline.configurations.data_configurations.input_nomrlizer_range, 
+                pipeline.configurations.data_configurations.eval_batch_size, 
+                pipeline.configurations.data_configurations.eval_scale, 
+                pipeline.configurations.data_configurations.benchmark_type
+            )
+        elif test_type == TestingStrategy.Patched:
+            return PredictionHelpers.EvaluteForPatchedTesting(
+                pipeline.validation_data_loader, 
+                pipeline.model, 
+                lpips_model, 
+                pipeline.configurations.data_configurations.input_nomrlizer_range, 
+                pipeline.configurations.data_configurations.eval_batch_size, 
+                pipeline.configurations.data_configurations.eval_scale, 
+                pipeline.configurations.data_configurations.benchmark_type
+            )
+        elif test_type == TestingStrategy.OverlappingPatched:
+            return PredictionHelpers.EvaluteForOverlapPatchedTesting(
+                pipeline.validation_data_loader, 
+                pipeline.model, 
+                lpips_model, 
+                pipeline.configurations.data_configurations.input_nomrlizer_range, 
+                pipeline.configurations.data_configurations.eval_batch_size, 
+                pipeline.configurations.data_configurations.eval_scale, 
+                pipeline.configurations.data_configurations.benchmark_type
+            )
+        else:
+            raise NotImplemented('Testing strategy not recognized')
 
     def _RunTests(self, pipeline: BaseTestingPipeline, factory: BaseModelFactory, test_type: TestingStrategy):
         factory.BuildModel(pipeline)
@@ -22,15 +57,7 @@ class BaseValidator(ABC):
 
         # 4. Call the testing
         timer = Timer()
-        results: dict[str, RunningAverage] = PredictionHelpers.EvaluteForTesting(
-            pipeline.validation_data_loader, 
-            pipeline.model, 
-            lpips_model, 
-            pipeline.configurations.data_configurations.input_nomrlizer_range, 
-            pipeline.configurations.data_configurations.eval_batch_size, 
-            pipeline.configurations.data_configurations.eval_scale, 
-            pipeline.configurations.data_configurations.benchmark_type
-        )
+        results: dict[str, RunningAverage] = self._GetPrediction(pipeline, lpips_model, test_type)
 
         # 5. Pass the result to writer
         out_path = Logger.LogTestResultsToCSV(
