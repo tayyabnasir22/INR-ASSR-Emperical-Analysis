@@ -5,7 +5,7 @@ from Models.TestingStrategy import TestingStrategy
 from Pipelines.Validation.BasePatchedTestingPipeline import BasePatchedTestingPipeline
 from Validators.BaseValidator import BaseValidator
 
-class EDSR_LIIF_PatchedValidator(BaseValidator):
+class PatchedValidator(BaseValidator):
     def __init__(self, encoder: EncoderType, decoder: DecoderType):
         super().__init__(encoder, decoder)
         

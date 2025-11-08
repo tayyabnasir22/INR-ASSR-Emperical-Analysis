@@ -5,7 +5,7 @@ from Models.TestingStrategy import TestingStrategy
 from Pipelines.Validation.BaseOverlapPatchedTestingPairedPipeline import BaseOverlapPatchedTestingPairedPipeline
 from Validators.BaseValidator import BaseValidator
 
-class EDSR_LIIF_OverlapPatchedPairedValidator(BaseValidator):
+class OverlapPatchedPairedValidator(BaseValidator):
     def __init__(self, encoder: EncoderType, decoder: DecoderType):
         super().__init__(encoder, decoder)
 
