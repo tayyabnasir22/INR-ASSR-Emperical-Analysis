@@ -17,19 +17,12 @@ class BaseTrainer:
         self._input_patch = input_patch
         self._scale_range = scale_range
 
-        base_path = '_'.join(
-            [
-                './model_states',
-                self._encoder.name,
-                self._decoder.name,
-                self._recipe.name,
-                'Patch',
-                str(self._input_patch),
-                'Scale',
-                str(self._scale_range[0]),
-                str(self._scale_range[1]),
-
-            ]
+        base_path = PathManager.GetModelSavePath(
+            self._encoder,
+            self._decoder,
+            self._recipe,
+            self._input_patch,
+            self._scale_range
         )
 
         self._model_save_path = base_path + ''
