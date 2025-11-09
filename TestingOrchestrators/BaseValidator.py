@@ -12,7 +12,7 @@ from Validators.SimplePairedValidator import SimplePairedValidator
 from Models.DecoderType import DecoderType
 from Models.EncoderType import EncoderType
 
-class ValidatorBuilder:
+class BaseValidator:
     @staticmethod
     def GetValidator(
         encoder: EncoderType,
@@ -152,7 +152,7 @@ class ValidatorBuilder:
 
 
     @staticmethod
-    def BuildAndRunValidation(
+    def BuildAndValidate(
         encoder: EncoderType,
         decoder: DecoderType,
         # Recipe args
@@ -187,7 +187,7 @@ class ValidatorBuilder:
         # 3. Build the required validator
         validator = None
         if test_strategy == TestingStrategy.Simple:
-            validator = ValidatorBuilder.GetValidator(
+            validator = BaseValidator.GetValidator(
                 encoder,
                 decoder,
                 eval_scale,
@@ -202,7 +202,7 @@ class ValidatorBuilder:
         elif test_strategy == TestingStrategy.Patched:
             if breakdown_patch_size is None:
                 raise Exception('Provide patch size')
-            validator = ValidatorBuilder.GetPatchedValiator(
+            validator = BaseValidator.GetPatchedValiator(
                 encoder,
                 decoder,
                 eval_scale,
@@ -218,7 +218,7 @@ class ValidatorBuilder:
         elif test_strategy == TestingStrategy.OverlappingPatched:
             if breakdown_patch_size is None or overlap is None:
                 raise Exception('Provide patch size, and overlap')
-            validator = ValidatorBuilder.GetPatchedOverlapValidator(
+            validator = BaseValidator.GetPatchedOverlapValidator(
                 encoder,
                 decoder,
                 eval_scale,
