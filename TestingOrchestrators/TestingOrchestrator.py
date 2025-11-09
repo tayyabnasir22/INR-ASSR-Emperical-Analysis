@@ -25,7 +25,7 @@ class TestingOrchestrator:
             print('Configs: ', configs.to_dict())
             print('-'*33)
             BaseValidator().BuildAndValidate(
-                configs.to_dict()
+                **configs.to_dict()
             )
             print('-'*33)
 
@@ -49,7 +49,7 @@ class TestingOrchestrator:
             print('Configs: ', configs.to_dict())
             print('-'*33)
             BaseValidator().BuildAndValidate(
-                configs.to_dict()
+                **configs.to_dict()
             )
             print('-'*33)
 
@@ -73,7 +73,7 @@ class TestingOrchestrator:
             print('Configs: ', configs.to_dict())
             print('-'*33)
             BaseValidator().BuildAndValidate(
-                configs.to_dict()
+                **configs.to_dict()
             )
             print('-'*33)
 
@@ -97,7 +97,7 @@ class TestingOrchestrator:
             print('Configs: ', configs.to_dict())
             print('-'*33)
             BaseValidator().BuildAndValidate(
-                configs.to_dict()
+                **configs.to_dict()
             )
             print('-'*33)
 
@@ -121,7 +121,7 @@ class TestingOrchestrator:
             print('Configs: ', configs.to_dict())
             print('-'*33)
             BaseValidator().BuildAndValidate(
-                configs.to_dict()
+                **configs.to_dict()
             )
             print('-'*33)
 
@@ -145,7 +145,7 @@ class TestingOrchestrator:
             print('Configs: ', configs.to_dict())
             print('-'*33)
             BaseValidator().BuildAndValidate(
-                configs.to_dict()
+                **configs.to_dict()
             )
             print('-'*33)
 
@@ -169,7 +169,7 @@ class TestingOrchestrator:
             print('Configs: ', configs.to_dict())
             print('-'*33)
             BaseValidator().BuildAndValidate(
-                configs.to_dict()
+                **configs.to_dict()
             )
             print('-'*33)
 

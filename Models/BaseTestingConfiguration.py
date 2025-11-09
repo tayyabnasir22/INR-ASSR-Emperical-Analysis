@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from Models.BenchmarkType import BenchmarkType
 from Models.DecoderType import DecoderType
 from Models.EncoderType import EncoderType
@@ -14,7 +14,7 @@ class BaseTestingConfiguration:
     # Recipe args
     recipe: RecipeType = RecipeType.Simple
     input_patch: int = 48 
-    scale_range: list[int, int] = [1,4] 
+    scale_range: list[int, int] = field(default_factory=lambda: [1, 4])
     # Scale args
     eval_scale: int = 2
     # Dataset args
@@ -26,6 +26,8 @@ class BaseTestingConfiguration:
     eval_batch_size: int = 300
     model_name: SavedModelType = SavedModelType.Last
     test_strategy: TestingStrategy = TestingStrategy.Simple
+    breakdown_patch_size: int = None,
+    overlap: int = None
 
     def to_dict(self):
         return self.__dict__.copy()

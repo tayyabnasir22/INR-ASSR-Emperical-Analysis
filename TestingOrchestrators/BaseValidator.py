@@ -41,7 +41,7 @@ class BaseValidator:
                         benchmark=benchmark
                     )
         else:
-            SimplePairedValidator(
+            return SimplePairedValidator(
                     encoder=encoder,
                     decoder=decoder,
                     valid_data_path=valid_data_path,
@@ -186,6 +186,7 @@ class BaseValidator:
 
         # 3. Build the required validator
         validator = None
+
         if test_strategy == TestingStrategy.Simple:
             validator = BaseValidator.GetValidator(
                 encoder,
