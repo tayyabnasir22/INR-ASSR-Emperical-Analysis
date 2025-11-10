@@ -12,6 +12,7 @@ from torch.optim.lr_scheduler import LRScheduler
 from tqdm import tqdm
 from tensorboardX import SummaryWriter
 import torch
+from Models.SavedModelType import SavedModelType
 
 class TrainingHelpers:
     @staticmethod
@@ -98,7 +99,7 @@ class TrainingHelpers:
                 pipeline.optimizer, 
                 epoch, 
                 pipeline.configurations.save_path, 
-                'best'
+                SavedModelType.Best.value
             )
 
     @staticmethod
@@ -179,7 +180,7 @@ class TrainingHelpers:
                 pipeline.optimizer, 
                 epoch, 
                 pipeline.configurations.save_path, 
-                'last'
+                SavedModelType.Last.value
             )
 
             # 3.7. Save model if required for this epoch
