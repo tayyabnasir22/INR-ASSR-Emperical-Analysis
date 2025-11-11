@@ -2,6 +2,7 @@ from ModelFactories.BaseModelFactory import BaseModelFactory
 from Models.DecoderType import DecoderType
 from Models.EncoderType import EncoderType
 from Models.RecipeType import RecipeType
+from Models.SavedModelType import SavedModelType
 from Pipelines.Training.BaseTrainingPipeline import BaseTrainingPipeline
 from Pipelines.Training.GradientLossTrainingPipeline import GradientLossTrainingPipeline
 from Pipelines.Training.GramL1LossTrainingPipeline import GramL1LossTrainingPipeline
@@ -26,7 +27,7 @@ class BaseTrainer:
         )
 
         self._model_save_path = base_path + ''
-        self._model_load_path = base_path + '/last.pth'
+        self._model_load_path = base_path + '/' + SavedModelType.Last + '.pth'
 
     def _GetPipeline(self,):
         if self._recipe == RecipeType.Simple:

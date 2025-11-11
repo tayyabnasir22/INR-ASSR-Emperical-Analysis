@@ -133,7 +133,7 @@ class TestingOrchestrator:
         configs.encoder = encoder
         configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
-        configs.valid_data_path = './datasets/CelebA-HQ/HR'
+        configs.valid_data_path = './datasets/CelebA-HQ'
 
         for scale in scales:
             print('Running CelebA-HQ, Scale: ', str(scale), 'x')
@@ -155,7 +155,7 @@ class TestingOrchestrator:
         configs.encoder = encoder
         configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
-        configs.valid_data_path = './datasets/SVT/HR'
+        configs.valid_data_path = './datasets/SVT'
 
         for scale in scales:
             print('Running SVT, Scale: ', str(scale), 'x')
