@@ -138,10 +138,8 @@ class TestingOrchestrator:
         for scale in scales:
             print('Running CelebA-HQ, Scale: ', str(scale), 'x')
             configs.eval_scale = scale
-            if scale <= 4:
-                configs.valid_data_pathScale = './datasets/CelebA-HQ/LR_bicubic/X' + str(scale)
-            else:
-                configs.valid_data_pathScale = None
+            
+            configs.valid_data_pathScale = None
             print('Configs: ', configs.to_dict())
             print('-'*33)
             BaseValidator().BuildAndValidate(
@@ -162,10 +160,8 @@ class TestingOrchestrator:
         for scale in scales:
             print('Running SVT, Scale: ', str(scale), 'x')
             configs.eval_scale = scale
-            if scale <= 4:
-                configs.valid_data_pathScale = './datasets/SVT/LR_bicubic/X' + str(scale)
-            else:
-                configs.valid_data_pathScale = None
+            
+            configs.valid_data_pathScale = None
             print('Configs: ', configs.to_dict())
             print('-'*33)
             BaseValidator().BuildAndValidate(
