@@ -9,7 +9,7 @@ This framework supports multiple **training recipes**, **IQA metrics**, **datase
 
 ### Training
 
-    1. Open **`train.py`**.  
+    1. Open train.py.  
     2. Uncomment the desired **training strategy**.  
     3. Run the script to begin model training.
 
@@ -111,7 +111,7 @@ Creating new training strategies is straightforward:
 
     1. Duplicate an existing recipe configuration.  
     2. Adjust the parameters including loss function, patch size, scale range, or learning rate scheduler to match your experimental setup.  
-    3. Register the new configuration in the **TrainingOrchestrator.py**.
+    3. Register the new configuration in the TrainingOrchestrator.py.
 
 
 
