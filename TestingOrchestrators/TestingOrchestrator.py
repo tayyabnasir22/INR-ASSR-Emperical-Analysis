@@ -6,10 +6,9 @@ from TestingOrchestrators.BaseValidator import BaseValidator
 
 class TestingOrchestrator:
     @staticmethod
-    def TestDIV2K(encoder: EncoderType, decoder: DecoderType):
+    def TestDIV2K(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
         scales = [2,3,4,6,12,18,24,30]
 
-        configs = BaseTestingConfiguration()
         configs.encoder = encoder
         configs.decoder = decoder
         configs.benchmark = BenchmarkType.DIV2K
@@ -30,10 +29,9 @@ class TestingOrchestrator:
             print('-'*33)
 
     @staticmethod
-    def TestSet5(encoder: EncoderType, decoder: DecoderType):
+    def TestSet5(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
         scales = [2,3,4,6,8,12]
 
-        configs = BaseTestingConfiguration()
         configs.encoder = encoder
         configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
@@ -54,10 +52,9 @@ class TestingOrchestrator:
             print('-'*33)
 
     @staticmethod
-    def TestSet14(encoder: EncoderType, decoder: DecoderType):
+    def TestSet14(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
         scales = [2,3,4,6,8,12]
 
-        configs = BaseTestingConfiguration()
         configs.encoder = encoder
         configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
@@ -78,10 +75,9 @@ class TestingOrchestrator:
             print('-'*33)
 
     @staticmethod
-    def TestB100(encoder: EncoderType, decoder: DecoderType):
+    def TestB100(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
         scales = [2,3,4,6,8,12]
 
-        configs = BaseTestingConfiguration()
         configs.encoder = encoder
         configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
@@ -102,10 +98,9 @@ class TestingOrchestrator:
             print('-'*33)
 
     @staticmethod
-    def TestUrban100(encoder: EncoderType, decoder: DecoderType):
+    def TestUrban100(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
         scales = [2,3,4,6,8,12]
 
-        configs = BaseTestingConfiguration()
         configs.encoder = encoder
         configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
@@ -126,10 +121,9 @@ class TestingOrchestrator:
             print('-'*33)
 
     @staticmethod
-    def TestCelebA_HQ(encoder: EncoderType, decoder: DecoderType):
+    def TestCelebA_HQ(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
         scales = [2,3,4,6,8,12]
 
-        configs = BaseTestingConfiguration()
         configs.encoder = encoder
         configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
@@ -148,10 +142,9 @@ class TestingOrchestrator:
             print('-'*33)
 
     @staticmethod
-    def TestSVT(encoder: EncoderType, decoder: DecoderType):
+    def TestSVT(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
         scales = [2,3,4,6,8,12]
 
-        configs = BaseTestingConfiguration()
         configs.encoder = encoder
         configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
