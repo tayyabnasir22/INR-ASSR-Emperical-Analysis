@@ -26,7 +26,7 @@ class BaseTestingConfiguration:
     eval_batch_size: int = 300
     model_name: SavedModelType = SavedModelType.Last
     test_strategy: TestingStrategy = TestingStrategy.Simple
-    breakdown_patch_size: int = None,
+    breakdown_patch_size: int = None
     overlap: int = None
 
     def to_dict(self):

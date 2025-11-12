@@ -6,11 +6,9 @@ from TestingOrchestrators.BaseValidator import BaseValidator
 
 class TestingOrchestrator:
     @staticmethod
-    def TestDIV2K(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
+    def TestDIV2K(configs: BaseTestingConfiguration):
         scales = [2,3,4,6,12,18,24,30]
 
-        configs.encoder = encoder
-        configs.decoder = decoder
         configs.benchmark = BenchmarkType.DIV2K
         configs.valid_data_path = './datasets/DIV2K/DIV2K_valid_HR'
 
@@ -29,11 +27,9 @@ class TestingOrchestrator:
             print('-'*33)
 
     @staticmethod
-    def TestSet5(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
+    def TestSet5(configs: BaseTestingConfiguration):
         scales = [2,3,4,6,8,12]
 
-        configs.encoder = encoder
-        configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
         configs.valid_data_path = './datasets/Set5/HR'
 
@@ -52,11 +48,9 @@ class TestingOrchestrator:
             print('-'*33)
 
     @staticmethod
-    def TestSet14(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
+    def TestSet14(configs: BaseTestingConfiguration):
         scales = [2,3,4,6,8,12]
 
-        configs.encoder = encoder
-        configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
         configs.valid_data_path = './datasets/Set14/HR'
 
@@ -75,11 +69,9 @@ class TestingOrchestrator:
             print('-'*33)
 
     @staticmethod
-    def TestB100(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
+    def TestB100(configs: BaseTestingConfiguration):
         scales = [2,3,4,6,8,12]
 
-        configs.encoder = encoder
-        configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
         configs.valid_data_path = './datasets/B100/HR'
 
@@ -98,11 +90,9 @@ class TestingOrchestrator:
             print('-'*33)
 
     @staticmethod
-    def TestUrban100(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
+    def TestUrban100(configs: BaseTestingConfiguration):
         scales = [2,3,4,6,8,12]
 
-        configs.encoder = encoder
-        configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
         configs.valid_data_path = './datasets/Urban100/HR'
 
@@ -121,11 +111,9 @@ class TestingOrchestrator:
             print('-'*33)
 
     @staticmethod
-    def TestCelebA_HQ(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
+    def TestCelebA_HQ(configs: BaseTestingConfiguration):
         scales = [2,3,4,6,8,12]
 
-        configs.encoder = encoder
-        configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
         configs.valid_data_path = './datasets/CelebA-HQ'
 
@@ -142,11 +130,9 @@ class TestingOrchestrator:
             print('-'*33)
 
     @staticmethod
-    def TestSVT(encoder: EncoderType, decoder: DecoderType, configs: BaseTestingConfiguration):
+    def TestSVT(configs: BaseTestingConfiguration):
         scales = [2,3,4,6,8,12]
 
-        configs.encoder = encoder
-        configs.decoder = decoder
         configs.benchmark = BenchmarkType.BENCHMARK
         configs.valid_data_path = './datasets/SVT'
 
