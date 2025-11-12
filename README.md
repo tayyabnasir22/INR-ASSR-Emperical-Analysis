@@ -1,4 +1,10 @@
 
+# INR-ASSR: Empirical Analysis
+
+A centralized repository for **training** and **evaluating** existing **INR-based ASSR** implementations.  
+This framework supports multiple **training recipes**, **IQA metrics**, **datasets**, and **encoders**, providing a unified interface for experimentation and benchmarking.
+
+
 ## Getting Started
 
 ### Training
@@ -117,11 +123,8 @@ It provides flexible configuration options to support a variety of datasets, sca
 By default, all **Testing Orchestrators** are designed to evaluate models across **multiple scales** for a given **encoder** and **decoder**.  
 The testing logic and parameters are primarily managed by the **`BaseTestingConfiguration`** module, which defines how models are initialized, loaded, and validated.
 
-Each orchestrator function accepts the following inputs:
-
-- **`encoder`** — The encoder architecture used during model training.  
-- **`decoder`** — The decoder architecture to be evaluated.  
-- **`base_test`** — A configuration object containing model training details, testing parameters, and validation options.
+Each orchestrator function accepts the following input:
+- **`base_test`** — A configuration object containing model (encoder-decoder), training details, testing parameters, and validation options.
 
 This modular design ensures that the same testing framework can be reused across different model architectures and datasets, while maintaining consistent evaluation protocols.
 

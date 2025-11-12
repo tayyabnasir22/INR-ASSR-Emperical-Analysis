@@ -11,7 +11,7 @@ def main():
 
     # Encoder-Decoder details
     base_config.encoder = EncoderType.EDSR
-    base_config.decoder = DecoderType.LIIF
+    base_config.decoder = DecoderType.HIIF
     
     # Recipe args
     base_config.recipe = RecipeType.Simple
@@ -26,44 +26,30 @@ def main():
     base_config.overlap = None
 
     TestingOrchestrator.TestDIV2K(
-        EncoderType.EDSR,
-        DecoderType.HIIF,
         base_config
     )
 
     TestingOrchestrator.TestSet5(
-        EncoderType.EDSR,
-        DecoderType.HIIF,
         base_config
     )
 
     TestingOrchestrator.TestSet14(
-        EncoderType.EDSR,
-        DecoderType.HIIF,
         base_config
     )
 
     TestingOrchestrator.TestB100(
-        EncoderType.EDSR,
-        DecoderType.HIIF,
         base_config
     )
 
     TestingOrchestrator.TestUrban100(
-        EncoderType.EDSR,
-        DecoderType.HIIF,
         base_config
     )
 
     TestingOrchestrator.TestSVT(
-        EncoderType.EDSR,
-        DecoderType.HIIF,
         base_config
     )
 
     TestingOrchestrator.TestCelebA_HQ(
-        EncoderType.EDSR,
-        DecoderType.HIIF,
         base_config
     )
 
