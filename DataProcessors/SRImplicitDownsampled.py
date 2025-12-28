@@ -85,5 +85,5 @@ class SRImplicitDownsampled(SRDataProcessorBase):
             'inp': crop_lr,
             'coord': hr_coord,
             'cell': cell,
-            'gt': hr_rgb
+            'gt': hr_rgb # not Hr image but the RGB values of the selected coordinates, only in case input size is None then it would be HR image, else random coordinates
         }
