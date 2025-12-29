@@ -1,6 +1,7 @@
 from Decoders.CiaoSR import CiaoSR
 from Decoders.HIIF import HIIF
 from Decoders.LIIF import LIIF
+from Decoders.LINF import LINF
 from Decoders.LTE import LTE
 from Decoders.MetaSR import MetaSR
 from Decoders.SRNO import SRNO
@@ -23,7 +24,8 @@ class BaseModelFactory:
             DecoderType.LIIF: LIIF,
             DecoderType.LTE: LTE,
             DecoderType.MetaSR: MetaSR,
-            DecoderType.SRNO: SRNO
+            DecoderType.SRNO: SRNO,
+            DecoderType.LINF: LINF,
         }
 
     def BuildModel(self, pipeline: PipelineBase, encoder: EncoderType, decoder: DecoderType):

@@ -16,8 +16,8 @@ class LINF(DecoderBase):
 
         self.encoder = encoder
                 
-        self.coef = nn.Conv2d(encoder.out_dim, hidden_dim, out_dim, padding=1) # coefficient
-        self.freq = nn.Conv2d(encoder.out_dim, hidden_dim, out_dim, padding=1) # frequency
+        self.coef = nn.Conv2d(encoder.out_dim, hidden_dim, 3, padding=1) # coefficient
+        self.freq = nn.Conv2d(encoder.out_dim, hidden_dim, 3, padding=1) # frequency
         self.phase = nn.Linear(2, hidden_dim//2, bias=False) # phase 
 
         layers = []
@@ -28,7 +28,7 @@ class LINF(DecoderBase):
             layers.append(nn.Conv2d(hidden_dim, hidden_dim, 1))
             layers.append(nn.ReLU())
 
-        layers.append(nn.Conv2d(hidden_dim, flow_layers*out_dim*2, 1))
+        layers.append(nn.Conv2d(hidden_dim, flow_layers*3*2, 1))
         self.layers = nn.Sequential(*layers)
 
         self.imnet = Flow(flow_layers=10)
@@ -118,7 +118,7 @@ class LINF(DecoderBase):
 
         # flow
         bs, w, h, _ = coord.shape
-        pred = self.imnet.inverse((torch.randn((bs * w * h, 3))), affine_info.permute(0, 2, 3, 1).contiguous().view(bs * w * h, -1))
+        pred = self.imnet.inverse((torch.randn((bs * w * h, 3)).cuda())*0, affine_info.permute(0, 2, 3, 1).contiguous().view(bs * w * h, -1))
         pred = pred.clone().view(bs, w, h, -1).permute(0, 3, 1, 2).contiguous()
 
         pred += F.grid_sample(self.inp, coord.flip(-1), mode='bilinear',\
