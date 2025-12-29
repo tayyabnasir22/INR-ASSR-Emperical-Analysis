@@ -27,7 +27,7 @@ class BaseTrainer:
         )
 
         self._model_save_path = base_path + ''
-        self._model_load_path = base_path + '/' + SavedModelType.Last + '.pth'
+        self._model_load_path = base_path + '/' + SavedModelType.Last.value + '.pth'
 
     def _GetPipeline(self,):
         if self._recipe == RecipeType.Simple:

@@ -21,7 +21,7 @@ class TestingOrchestrator:
                 configs.valid_data_pathScale = None
             print('Configs: ', configs.to_dict())
             print('-'*33)
-            BaseValidator().BuildAndValidate(
+            BaseValidator.BuildAndValidate(
                 **configs.to_dict()
             )
             print('-'*33)
@@ -42,7 +42,7 @@ class TestingOrchestrator:
                 configs.valid_data_pathScale = None
             print('Configs: ', configs.to_dict())
             print('-'*33)
-            BaseValidator().BuildAndValidate(
+            BaseValidator.BuildAndValidate(
                 **configs.to_dict()
             )
             print('-'*33)
@@ -63,7 +63,7 @@ class TestingOrchestrator:
                 configs.valid_data_pathScale = None
             print('Configs: ', configs.to_dict())
             print('-'*33)
-            BaseValidator().BuildAndValidate(
+            BaseValidator.BuildAndValidate(
                 **configs.to_dict()
             )
             print('-'*33)
@@ -84,7 +84,7 @@ class TestingOrchestrator:
                 configs.valid_data_pathScale = None
             print('Configs: ', configs.to_dict())
             print('-'*33)
-            BaseValidator().BuildAndValidate(
+            BaseValidator.BuildAndValidate(
                 **configs.to_dict()
             )
             print('-'*33)
@@ -105,7 +105,7 @@ class TestingOrchestrator:
                 configs.valid_data_pathScale = None
             print('Configs: ', configs.to_dict())
             print('-'*33)
-            BaseValidator().BuildAndValidate(
+            BaseValidator.BuildAndValidate(
                 **configs.to_dict()
             )
             print('-'*33)
@@ -124,7 +124,7 @@ class TestingOrchestrator:
             configs.valid_data_pathScale = None
             print('Configs: ', configs.to_dict())
             print('-'*33)
-            BaseValidator().BuildAndValidate(
+            BaseValidator.BuildAndValidate(
                 **configs.to_dict()
             )
             print('-'*33)
@@ -143,7 +143,7 @@ class TestingOrchestrator:
             configs.valid_data_pathScale = None
             print('Configs: ', configs.to_dict())
             print('-'*33)
-            BaseValidator().BuildAndValidate(
+            BaseValidator.BuildAndValidate(
                 **configs.to_dict()
             )
             print('-'*33)

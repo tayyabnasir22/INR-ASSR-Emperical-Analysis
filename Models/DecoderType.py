@@ -7,3 +7,4 @@ class DecoderType(Enum):
     LTE = 'LTE'
     LIIF = 'LIIF'
     MetaSR = 'MetaSR'
+    LINF = 'LINF'
