@@ -191,11 +191,9 @@ class ImageProcessor:
         idx = 0
         for i in range(0, H, stride):
             h_end = min(i + patch_size, H)
-            i = max(h_end - patch_size, 0)
 
             for j in range(0, W, stride):
                 w_end = min(j + patch_size, W)
-                j = max(w_end - patch_size, 0)
 
                 patch = patches[idx]
 
@@ -204,7 +202,7 @@ class ImageProcessor:
                 weight[:, :, i:h_end, j:w_end] += 1
                 idx += 1
 
-        merged /= weight  # average overlapping regions
+        merged /= weight.clamp(min=1)  # average overlapping regions
         return merged.contiguous()
 
     @staticmethod
@@ -222,11 +220,9 @@ class ImageProcessor:
         stride = patch_size - overlap
         for i in range(0, H_lr, stride):
             h_end = min(i + patch_size, H_lr)
-            i = max(h_end - patch_size, 0)  # adjust so last patch fits
 
             for j in range(0, W_lr, stride):
                 w_end = min(j + patch_size, W_lr)
-                j = max(w_end - patch_size, 0)
 
                 # LR patch
                 lr_patch = lr_img[:, :, i:h_end, j:w_end]
@@ -280,3 +276,53 @@ class ImageProcessor:
         gx = F.conv2d(img, sobel_x, padding=1, groups=C)
         gy = F.conv2d(img, sobel_y, padding=1, groups=C)
         return gx, gy
+    
+    @staticmethod
+    def GetYChannelTensor(x):
+        # X is normalized RGB image tensor
+        # BT.601 luma coefficients (0–255 range → normalized)
+        gray_coeffs = torch.tensor([65.738, 129.057, 25.064], dtype=x.dtype, device=x.device) / 256.0
+
+        # (3,) × (3,H,W) → broadcasting over H,W
+        Y = (x * gray_coeffs.view(3,1,1)).sum(dim=0, keepdim=True)  # → 1,H,W
+
+        return Y
+    
+    @staticmethod
+    def PadToMultiple(x, multiple=14):
+        if x.dim() == 4:
+            _, _, h, w = x.shape
+        elif x.dim() == 3:
+            _, h, w = x.shape
+        else:
+            raise ValueError(f"Unsupported tensor shape: {x.shape}")
+
+        pad_h = (multiple - h % multiple) % multiple
+        pad_w = (multiple - w % multiple) % multiple
+
+        # F.pad format: (left, right, top, bottom)
+        return F.pad(x, (0, pad_w, 0, pad_h), mode="constant", value=0), h, w
+    
+    @staticmethod
+    def PadToSize(x, patch_size=280):
+        if x.dim() == 4:
+            _, _, h, w = x.shape
+        elif x.dim() == 3:
+            _, h, w = x.shape
+        else:
+            raise ValueError(f"Unsupported tensor shape: {x.shape}")
+
+        pad_h = patch_size - h
+        pad_w = patch_size - w
+
+        # F.pad format: (left, right, top, bottom)
+        return F.pad(x, (0, pad_w, 0, pad_h), mode="constant", value=0), h, w
+    
+    @staticmethod
+    def CropFromTop(x, orig_h, orig_w):
+        if x.dim() == 4:
+            return x[:, :, :orig_h, :orig_w]
+        elif x.dim() == 3:
+            return x[:, :orig_h, :orig_w]
+        else:
+            raise ValueError(f"Unsupported tensor shape: {x.shape}")
