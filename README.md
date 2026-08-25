@@ -10,7 +10,8 @@ This framework supports multiple **training recipes**, **IQA metrics**, **datase
 If you use this repository or build upon it in your research, please cite the following paper:
 
 > **INR-ASSR: Empirical Analysis of Implicit Neural Representations for Arbitrary-Scale Super-Resolution**\
-
+> arXiv:2601.17723\
+> [https://arxiv.org/abs/2601.17723](https://arxiv.org/abs/2601.17723)
 
 ---
 
