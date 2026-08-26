@@ -191,9 +191,11 @@ class ImageProcessor:
         idx = 0
         for i in range(0, H, stride):
             h_end = min(i + patch_size, H)
+            i = max(h_end - patch_size, 0)
 
             for j in range(0, W, stride):
                 w_end = min(j + patch_size, W)
+                j = max(w_end - patch_size, 0)
 
                 patch = patches[idx]
 
@@ -220,9 +222,11 @@ class ImageProcessor:
         stride = patch_size - overlap
         for i in range(0, H_lr, stride):
             h_end = min(i + patch_size, H_lr)
+            i = max(h_end - patch_size, 0)
 
             for j in range(0, W_lr, stride):
                 w_end = min(j + patch_size, W_lr)
+                j = max(w_end - patch_size, 0)
 
                 # LR patch
                 lr_patch = lr_img[:, :, i:h_end, j:w_end]
